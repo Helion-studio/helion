@@ -8,7 +8,7 @@ export function SiteFooter() {
     <footer className="bg-navy">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 border-t border-white/10 px-6 py-8 text-sm text-white/45 sm:flex-row sm:items-center sm:justify-between lg:px-10">
         <div className="flex items-center gap-2.5">
-          <BrandMark className="size-5 text-white/70" />
+          <BrandMark variant="white" className="h-6 w-auto opacity-70" />
           <span>
             &copy; {year} {site.name}. All rights reserved.
           </span>

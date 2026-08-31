@@ -37,12 +37,19 @@ Verified: `npm run build` → compiled, types valid, 5/5 static pages, **103 kB 
 | `lib/site.ts` | **All copy, nav, specializations, links.** Edit this first. |
 | `app/globals.css` | Design tokens (colours, fonts) + textures + keyframes. |
 | `components/brand.tsx` | **Logo mark + wordmark.** Replace the SVG to rebrand everything. |
-| `components/site-header.tsx` | Navy header band (86px — matches reference). |
-| `components/hero.tsx` | Hero + "We specialize in" card. |
-| `components/closing-cta.tsx` | Navy closing CTA band. |
+| `components/site-header.tsx` | Navy header, split-3 (brand · nav · CTA), 86px. |
+| `components/hero.tsx` | Hero: micro-label, two-tone headline, dual CTAs, trust row. |
+| `components/device-mockups.tsx` | Layered desktop + tablet + phone mockups (pure CSS, no images). |
+| `components/stats-bar.tsx` | Three-up social-proof band. |
+| `components/services.tsx` | Centred header + 4-column card grid (borderless). |
+| `components/closing-cta.tsx` | Navy CTA band — bookends the header. |
 | `components/site-footer.tsx` | Footer. |
-| `components/solar-ring.tsx` | Decorative rotating wireframe. |
-| `components/icons.tsx` | Arrow + GitHub icons. |
+| `components/icons.tsx` | Outlined icon set (24×24, stroke 1.6) + `Icon` name resolver. |
+| `components/ui.tsx` | Shared button classes — one radius + height everywhere. |
+
+### Page flow
+
+`header` (identity) → `hero` (promise + device proof) → `stats` (credibility) → `services` (offerings) → `closing CTA` (action), framed by navy bands top and bottom.
 
 ## Design system
 
@@ -65,18 +72,33 @@ Extracted from the client reference. Light canvas, navy bands, **one** blue acce
 
 **Changing the accent:** edit `--color-accent` (+ `-deep`, `-soft`) in `app/globals.css`. Every button, dot and link follows. Keep it to one hue — that's what makes it read as professional.
 
+## Logo assets
+
+| File | Use |
+| --- | --- |
+| `public/helion-mark.png` | Original full-colour mark, transparent, 512px — **for light backgrounds** |
+| `public/helion-mark-white.png` | White knockout silhouette, 512px — **for navy/dark backgrounds** |
+| `app/icon.png` | Favicon — navy rounded square + white mark, 256px (auto-wired by Next.js) |
+
+**Why two variants:** the supplied mark is ~62% dark tones (mean luminance 122/255). On the
+navy `#000719` header and footer it loses all definition, so `BrandMark` takes a `variant` prop:
+
+```tsx
+<BrandMark variant="white" />  {/* navy backgrounds — header, footer */}
+<BrandMark variant="color" />  {/* light backgrounds */}
+```
+
+The knockout preserves the original shape and negative-space cuts exactly — only the fill changes.
+
 ## Before launch
 
 Everything flagged `REPLACE:` in `lib/site.ts` is placeholder:
 
 1. `site.repo.url` / `site.repo.handle` — real GitHub org URL
 2. `site.email`, `site.url` — real contact + domain
-3. Swap the placeholder mark in `components/brand.tsx` for the approved logo
 
 ## Notes
 
 - Motion is hand-written CSS keyframes, staggered 60→440ms, disabled under `prefers-reduced-motion`. No animation dependencies.
 - `npm audit` → 0 vulnerabilities (`postcss` / `sharp` pinned via `overrides`).
 - `npx tsc --noEmit` → clean.
-# helion
-# helion

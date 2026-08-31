@@ -1,37 +1,36 @@
+import Image from "next/image";
+
 /**
- * PLACEHOLDER MARK — swap this file when the real logo is approved.
- * Everything imports `BrandMark` from here, so replacing the SVG below
- * rebrands the entire site.
+ * Helion mark.
  *
- * Clean geometric "aperture / helion" mark: ring + rays + core.
+ * Two variants exist because the original mark is ~62% dark tones — it loses
+ * all definition on the navy header/footer bands.
+ *
+ *  - "white" → knockout silhouette, for navy / dark backgrounds
+ *  - "color" → the original full-colour mark, for light backgrounds
+ *
+ * Source assets live in /public. Intrinsic ratio is 980×808.
  */
 
-const RAYS = 8;
+const MARK_WIDTH = 512;
+const MARK_HEIGHT = 422; // keeps the 980:808 aspect
 
-export function BrandMark({ className = "" }: { className?: string }) {
+export function BrandMark({
+  className = "",
+  variant = "white",
+}: {
+  className?: string;
+  variant?: "color" | "white";
+}) {
   return (
-    <svg
-      viewBox="0 0 32 32"
-      fill="none"
+    <Image
+      src={variant === "color" ? "/helion-mark.png" : "/helion-mark-white.png"}
+      alt=""
       aria-hidden="true"
+      width={MARK_WIDTH}
+      height={MARK_HEIGHT}
       className={className}
-      strokeLinecap="round"
-    >
-      <circle cx="16" cy="16" r="11" stroke="currentColor" strokeWidth="1.7" />
-      <g stroke="currentColor" strokeWidth="1.7">
-        {Array.from({ length: RAYS }).map((_, i) => (
-          <line
-            key={i}
-            x1="16"
-            y1="3.6"
-            x2="16"
-            y2="1.4"
-            transform={`rotate(${i * (360 / RAYS)} 16 16)`}
-          />
-        ))}
-      </g>
-      <circle cx="16" cy="16" r="3.4" fill="currentColor" />
-    </svg>
+    />
   );
 }
 
