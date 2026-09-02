@@ -39,7 +39,7 @@ const ResponsiveHeroBanner: React.FC<ResponsiveHeroBannerProps> = ({
   logoUrl = "/logo.png",
   logoAlt = "Logo",
   // The author's original artwork, vendored into /public so it can't rot
-  backgroundImageUrl = "/hero/hero-bg.jpg",
+  backgroundImageUrl = "/hero/hero-bg-blue.jpg",
   navLinks = [
     { label: "Home", href: "#", isActive: true },
     { label: "Work", href: "#work" },
@@ -71,12 +71,29 @@ const ResponsiveHeroBanner: React.FC<ResponsiveHeroBannerProps> = ({
 
   return (
     <section className="w-full isolate min-h-screen overflow-hidden relative">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={backgroundImageUrl}
-        alt=""
-        className="w-full h-full object-cover absolute top-0 right-0 bottom-0 left-0"
-      />
+      {/* background artwork: base layer + a screen-blended copy masked to a
+          travelling band, so light runs along the arc without touching hue */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={backgroundImageUrl}
+          alt=""
+          className="hero-bg-base w-full h-full object-cover absolute top-0 right-0 bottom-0 left-0"
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={backgroundImageUrl}
+          alt=""
+          aria-hidden
+          className="hero-bg-sweep w-full h-full object-cover absolute top-0 right-0 bottom-0 left-0"
+        />
+        {/* soft bloom that breathes with the arc */}
+        <div
+          aria-hidden
+          className="hero-glow pointer-events-none absolute -right-[10%] top-[8%] h-[85%] w-[70%]
+            [background:radial-gradient(closest-side,rgba(47,163,255,0.28),transparent_72%)]"
+        />
+      </div>
       <div className="pointer-events-none absolute inset-0 ring-1 ring-black/30" />
 
       <header className="z-20 xl:top-4 relative">

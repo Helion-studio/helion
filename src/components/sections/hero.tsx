@@ -5,7 +5,7 @@ export function Hero() {
     <ResponsiveHeroBanner
       logoUrl="/logo.png"
       logoAlt="Helion Studio"
-      backgroundImageUrl="/hero/hero-bg.jpg"
+      backgroundImageUrl="/hero/hero-bg-blue.jpg"
       badgeLabel="New"
       badgeText="Booking Q4 builds"
       title="We build what others"

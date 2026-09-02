@@ -253,3 +253,62 @@
   .animate-fade-slide-in-3,
   .animate-fade-slide-in-4 { animation: none; opacity: 1; transform: none; }
 }
+
+
+/* ------------------------------------------------------------------
+   Hero artwork — subtle life.
+   Two cheap, GPU-composited layers over the same image:
+     .hero-bg-base   very slow breathe (scale + brightness)
+     .hero-bg-sweep  a copy in `screen` blend, masked to a narrow band
+                     that travels along the arc, so light appears to
+                     run down the curve. Colour is never changed —
+                     only existing luminance is amplified.
+------------------------------------------------------------------- */
+.hero-bg-base {
+  transform: scale(1.03);
+  animation: heroBreathe 19s ease-in-out infinite;
+  will-change: transform, filter;
+}
+
+@keyframes heroBreathe {
+  0%, 100% { transform: scale(1.03); filter: brightness(1) saturate(1); }
+  50%      { transform: scale(1.055); filter: brightness(1.1) saturate(1.06); }
+}
+
+.hero-bg-sweep {
+  mix-blend-mode: screen;
+  opacity: 0.55;
+  transform: scale(1.03);
+  -webkit-mask-image: linear-gradient(112deg, transparent 40%, #000 50%, transparent 60%);
+  mask-image: linear-gradient(112deg, transparent 40%, #000 50%, transparent 60%);
+  -webkit-mask-size: 260% 100%;
+  mask-size: 260% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  animation: heroSweep 11s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: mask-position;
+}
+
+@keyframes heroSweep {
+  0%   { -webkit-mask-position: 130% 0; mask-position: 130% 0; opacity: 0; }
+  15%  { opacity: 0.55; }
+  85%  { opacity: 0.55; }
+  100% { -webkit-mask-position: -60% 0; mask-position: -60% 0; opacity: 0; }
+}
+
+/* a slow pulse on the glow bloom sitting under the arc */
+.hero-glow {
+  animation: heroGlow 13s ease-in-out infinite;
+}
+
+@keyframes heroGlow {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 0.7; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg-base,
+  .hero-bg-sweep,
+  .hero-glow { animation: none; }
+  .hero-bg-sweep { opacity: 0; }
+}
