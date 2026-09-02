@@ -1,18 +1,42 @@
 "use client";
 
 import * as React from "react";
+import dynamic from "next/dynamic";
 import { motion, useReducedMotion, type Variants } from "motion/react";
 
-import { Starfield } from "@/components/blocks/starfield";
-import { Orb } from "@/components/blocks/orb";
+import { ShootingStars } from "@/components/blocks/shooting-stars";
 import { site } from "@/lib/site";
 
 const EASE = [0.4, 0, 0.2, 1] as const;
-
 const HEADLINE = ["We", "build", "what", "others", "only", "imagine."];
+
+/* WebGL is client-only and must never block first paint */
+const Cosmos = dynamic(() => import("@/components/three/cosmos"), {
+  ssr: false,
+});
+
+/** Feature-detect once so a machine without WebGL still gets a good hero. */
+function useWebGL() {
+  const [ok, setOk] = React.useState<boolean | null>(null);
+  React.useEffect(() => {
+    try {
+      const c = document.createElement("canvas");
+      setOk(
+        !!(
+          window.WebGLRenderingContext &&
+          (c.getContext("webgl") || c.getContext("experimental-webgl"))
+        ),
+      );
+    } catch {
+      setOk(false);
+    }
+  }, []);
+  return ok;
+}
 
 export function HeroCosmic() {
   const reduce = useReducedMotion();
+  const webgl = useWebGL();
 
   const word: Variants = {
     hidden: { opacity: 0, y: reduce ? 0 : 28 },
@@ -41,23 +65,38 @@ export function HeroCosmic() {
       id="hero"
       className="relative isolate flex min-h-[100svh] flex-col items-center justify-center overflow-hidden bg-black px-6 md:px-12 lg:px-16"
     >
-      {/* ---------- starfield ---------- */}
-      <Starfield className="absolute inset-0 -z-20 h-full w-full" />
+      {/* ---------- WebGL: star volume + dome ---------- */}
+      <div className="absolute inset-0 -z-30">{webgl && <Cosmos />}</div>
 
-      {/* faint vignette so text always wins */}
+      {/* ---------- CSS: atmospheric bloom under the dome ---------- */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 [background:radial-gradient(120%_80%_at_50%_0%,transparent_40%,rgba(0,0,0,0.65)_100%)]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 -z-20 h-[62vh]
+          [background:radial-gradient(60%_100%_at_50%_100%,rgba(0,102,255,0.20)_0%,rgba(0,102,255,0.08)_38%,transparent_72%)]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 -z-20 h-[32vh]
+          [background:radial-gradient(45%_100%_at_50%_112%,rgba(0,170,255,0.26)_0%,transparent_70%)]"
       />
 
-      {/* ---------- text block (upper-middle) ---------- */}
-      <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center pb-[34vh] pt-24 text-center sm:pb-[30vh]">
+      {/* ---------- CSS: shooting stars ---------- */}
+      <ShootingStars />
+
+      {/* ---------- CSS: vignette so type always wins ---------- */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 [background:radial-gradient(120%_80%_at_50%_0%,transparent_42%,rgba(0,0,0,0.6)_100%)]"
+      />
+
+      {/* ---------- text ---------- */}
+      <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center pb-[32vh] pt-24 text-center sm:pb-[28vh]">
         <motion.h1
           initial="hidden"
           animate="show"
-          className="flex flex-wrap items-center justify-center gap-x-[0.28em] gap-y-1 font-display font-semibold text-white"
+          className="flex flex-wrap items-center justify-center gap-x-[0.26em] gap-y-1 font-display font-semibold text-white"
           style={{
-            fontSize: "clamp(40px, 6vw, 96px)",
+            fontSize: "clamp(38px, 5.6vw, 92px)",
             lineHeight: 1.05,
             letterSpacing: "-0.02em",
           }}
@@ -95,23 +134,21 @@ export function HeroCosmic() {
           works.
         </motion.p>
 
-        {/* ---------- CTAs ---------- */}
         <motion.div
           initial="hidden"
           animate="show"
           variants={fade(0.88)}
-          className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:gap-4"
+          className="mt-10 flex flex-col items-center gap-4 sm:flex-row"
         >
           <a
             href={site.cta.href}
-            className="group inline-flex items-center justify-center rounded-full border border-white bg-white px-7 py-3.5
+            className="inline-flex items-center justify-center rounded-full border border-white bg-white px-7 py-3.5
               text-sm font-medium text-black transition-all duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)]
               hover:scale-[1.02] hover:bg-white/10 hover:text-white
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
           >
             Start your project
           </a>
-
           <a
             href="#work"
             className="inline-flex items-center justify-center rounded-full border border-white/25 bg-transparent px-7 py-3.5
@@ -124,15 +161,15 @@ export function HeroCosmic() {
         </motion.div>
       </div>
 
-      {/* ---------- the orb ---------- */}
-      <motion.div
-        initial={{ opacity: 0, y: reduce ? 0 : 48, scale: reduce ? 1 : 0.96 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 1.3, delay: reduce ? 0 : 0.35, ease: EASE }}
-        className="pointer-events-none absolute bottom-[8vh] left-1/2 z-0 -translate-x-1/2 sm:bottom-[10vh]"
-      >
-        <Orb />
-      </motion.div>
+      {/* ---------- no-WebGL fallback: pure CSS dome ---------- */}
+      {webgl === false && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute bottom-0 left-1/2 -z-20 h-[38vh] w-[160vw] -translate-x-1/2 rounded-t-[50%]
+            border-t border-[#0066ff]/40
+            [background:radial-gradient(120%_180%_at_50%_100%,#0b1836_0%,#03050d_45%,#000_75%)]"
+        />
+      )}
     </section>
   );
 }

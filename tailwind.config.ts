@@ -31,6 +31,7 @@ const config: Config = {
         // Drop the files in public/fonts/ (see public/fonts/README.md) and they
         // activate automatically; until then this falls back to Geist.
         display: [
+          "var(--font-display)",
           "Nevera",
           "Varino",
           "var(--font-sans)",

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist } from "next/font/google";
+import { Geist, Unbounded } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { site } from "@/lib/site";
 import "./globals.css";
@@ -13,6 +13,18 @@ const geist = Geist({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
+});
+
+/**
+ * Display face — Unbounded. Free (SIL OFL) via Google Fonts, geometric and
+ * wide with real presence at 96px, which is what the spec was reaching for
+ * with Nevera/Varino. Body copy stays on Geist.
+ */
+const display = Unbounded({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-display",
+  weight: ["500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -45,6 +57,7 @@ export default function RootLayout({
       className={cn(
         "dark h-full scroll-smooth font-sans antialiased",
         geist.variable,
+        display.variable,
       )}
       style={{ ["--font-geist" as string]: "var(--font-sans)" }}
       suppressHydrationWarning
