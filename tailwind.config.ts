@@ -30,16 +30,6 @@ const config: Config = {
         // Spec §8 — Nevera/Varino are commercial faces and are NOT bundled.
         // Drop the files in public/fonts/ (see public/fonts/README.md) and they
         // activate automatically; until then this falls back to Geist.
-        display: [
-          "var(--font-display)",
-          "Nevera",
-          "Varino",
-          "var(--font-sans)",
-          "Inter",
-          "ui-sans-serif",
-          "system-ui",
-          "sans-serif",
-        ],
         // `font-geist` is used by several 21st.dev components
         geist: ["var(--font-geist)", "ui-sans-serif", "system-ui", "sans-serif"],
       },

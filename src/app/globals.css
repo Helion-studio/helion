@@ -6,6 +6,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* --- 21st.dev responsive-hero-banner --- */
+  --font-serif: var(--font-serif-src), "Instrument Serif", Georgia, serif;
+  --font-instrument-serif: var(--font-serif-src), "Instrument Serif", Georgia, serif;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
@@ -93,6 +97,16 @@
 }
 
 :root {
+  /* tokens from the component's integration guide */
+  --bg-0: #09090b;
+  --bg-100: #18181b;
+  --bg-200: #27272a;
+  --bg-300: #3f3f46;
+  --text-100: #fafafa;
+  --text-200: #e4e4e7;
+  --text-300: #a1a1aa;
+  --text-400: #71717a;
+
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -205,72 +219,6 @@
 }
 
 
-/* ============================================================
-   Helion cosmic hero — spec §3 (rainbow underline) and §5 (orb sweep)
-   ============================================================ */
-
-/* Rainbow spectral underline that sweeps left -> right, 3s linear infinite */
-.rainbow-underline {
-  position: relative;
-  white-space: nowrap;
-}
-.rainbow-underline::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -0.18em;
-  height: 2px;
-  border-radius: 2px;
-  background: linear-gradient(
-    90deg,
-    #ff3b30,
-    #ff9500,
-    #ffd60a,
-    #34c759,
-    #00aaff,
-    #0066ff,
-    #af52de,
-    #ff3b30
-  );
-  background-size: 200% 100%;
-  animation: rainbow-sweep 3s linear infinite;
-}
-
-@keyframes rainbow-sweep {
-  from { background-position: 0% 50%; }
-  to   { background-position: 200% 50%; }
-}
-
-/* Orb rim sweep: a bright arc rotating inside a 3px ring mask */
-.orb-sweep {
-  -webkit-mask: radial-gradient(closest-side, transparent 0 94.5%, #000 96%, #000 100%);
-  mask: radial-gradient(closest-side, transparent 0 94.5%, #000 96%, #000 100%);
-}
-.orb-sweep-rotor {
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    transparent 336deg,
-    rgba(200, 235, 255, 0.55) 348deg,
-    #ffffff 354deg,
-    rgba(200, 235, 255, 0.55) 360deg
-  );
-  animation: orb-sweep 5.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-.group\/orb:hover .orb-sweep-rotor { animation-duration: 3.6s; }
-
-@keyframes orb-sweep {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .rainbow-underline::after,
-  .orb-sweep-rotor { animation: none !important; }
-}
-
-
 /* ------------------------------------------------------------------
    Spec §8 — Nevera / Varino. Commercial fonts, not bundled.
    Drop the .woff2 into public/fonts/ and uncomment to activate.
@@ -287,42 +235,21 @@
 */
 
 
-/* ---------------- shooting stars (CSS layer over the WebGL canvas) ------- */
-.shooting-star {
-  position: absolute;
-  height: 1px;
-  transform-origin: left center;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(190, 225, 255, 0.55) 55%,
-    rgba(255, 255, 255, 0.95) 100%
-  );
-  opacity: 0;
-  animation-name: shoot;
-  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  animation-fill-mode: forwards;
-  will-change: transform, opacity;
-}
-.shooting-star::after {
-  content: "";
-  position: absolute;
-  right: -1px;
-  top: -0.5px;
-  width: 2px;
-  height: 2px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 0 6px 1px rgba(200, 230, 255, 0.9);
-}
 
-@keyframes shoot {
-  0%   { opacity: 0; translate: 0 0; }
-  12%  { opacity: 1; }
-  85%  { opacity: 1; }
-  100% { opacity: 0; translate: 62vw 0; }
+
+/* --- 21st.dev responsive-hero-banner: entrance animation (from the author) --- */
+@keyframes fadeSlideIn {
+  0%  { opacity: 0; transform: translateY(20px); }
+  to  { opacity: 1; transform: translateY(0); }
 }
+.animate-fade-slide-in-1 { animation: 1s ease-out .1s both fadeSlideIn; }
+.animate-fade-slide-in-2 { animation: 1s ease-out .2s both fadeSlideIn; }
+.animate-fade-slide-in-3 { animation: 1s ease-out .3s both fadeSlideIn; }
+.animate-fade-slide-in-4 { animation: 1s ease-out .4s both fadeSlideIn; }
 
 @media (prefers-reduced-motion: reduce) {
-  .shooting-star { display: none; }
+  .animate-fade-slide-in-1,
+  .animate-fade-slide-in-2,
+  .animate-fade-slide-in-3,
+  .animate-fade-slide-in-4 { animation: none; opacity: 1; transform: none; }
 }

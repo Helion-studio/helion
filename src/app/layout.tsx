@@ -1,30 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Unbounded } from "next/font/google";
+import { Geist, Instrument_Serif } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { site } from "@/lib/site";
 import "./globals.css";
 
-/**
- * Geist is the display + body face. It's exposed as BOTH `--font-sans`
- * (our default) and `--font-geist` (the variable several 21st.dev
- * components reference via `font-geist`), so pasted code needs no edits.
- */
+/** Body / UI face. */
 const geist = Geist({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
 });
 
-/**
- * Display face — Unbounded. Free (SIL OFL) via Google Fonts, geometric and
- * wide with real presence at 96px, which is what the spec was reaching for
- * with Nevera/Varino. Body copy stays on Geist.
- */
-const display = Unbounded({
+/** Display face — matches the hero component's original design. */
+const serif = Instrument_Serif({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-display",
-  weight: ["500", "600", "700"],
+  weight: "400",
+  variable: "--font-serif-src",
 });
 
 export const metadata: Metadata = {
@@ -44,7 +36,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#12161d",
+  themeColor: "#000000",
   colorScheme: "dark",
 };
 
@@ -57,12 +49,11 @@ export default function RootLayout({
       className={cn(
         "dark h-full scroll-smooth font-sans antialiased",
         geist.variable,
-        display.variable,
+        serif.variable,
       )}
-      style={{ ["--font-geist" as string]: "var(--font-sans)" }}
       suppressHydrationWarning
     >
-      <body className="flex min-h-full flex-col bg-black text-white selection:bg-helion-steel/30">
+      <body className="flex min-h-full flex-col bg-black text-white">
         {children}
       </body>
     </html>
