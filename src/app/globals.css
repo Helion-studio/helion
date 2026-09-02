@@ -1,0 +1,287 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@config "../../tailwind.config.ts";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  --color-brand-cyan: #5ce1e6;
+  --color-brand-violet: #7c5cff;
+  --color-brand-pink: #ff6ba9;
+  /* ---- Helion brand (sampled from the logo) ---- */
+  --color-helion-ice: #dce6ef;
+  --color-helion-mist: #b4c8d8;
+  --color-helion-steel: #8ba2b8;
+  --color-helion-slate: #5b7085;
+  --color-helion-deep: #3c4854;
+  --color-helion-ink: #232c38;
+  --color-helion-void: #12161d;
+  --animate-shiny-text: shiny-text 8s infinite;
+  --animate-aurora: aurora 8s ease-in-out infinite alternate;
+  @keyframes shiny-text {
+  0%, 90%, 100% {
+    background-position: calc(-100% - var(--shiny-width)) 0;
+    }
+  30%, 60% {
+    background-position: calc(100% + var(--shiny-width)) 0;
+    }
+  }
+  @keyframes aurora {
+  0% {
+    background-position: 0% 50%;
+    transform: rotate(-5deg) scale(0.9);
+    }
+  25% {
+    background-position: 50% 100%;
+    transform: rotate(5deg) scale(1.1);
+    }
+  50% {
+    background-position: 100% 50%;
+    transform: rotate(-3deg) scale(0.95);
+    }
+  75% {
+    background-position: 50% 0%;
+    transform: rotate(3deg) scale(1.05);
+    }
+  100% {
+    background-position: 0% 50%;
+    transform: rotate(-5deg) scale(0.9);
+    }
+  }
+}
+
+:root {
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+}
+
+.dark {
+  --background: oklch(0.163 0.011 250);
+  --foreground: oklch(0.955 0.006 245);
+  --card: oklch(0.203 0.013 250);
+  --card-foreground: oklch(0.955 0.006 245);
+  --popover: oklch(0.203 0.013 250);
+  --popover-foreground: oklch(0.955 0.006 245);
+  --primary: oklch(0.845 0.032 240);
+  --primary-foreground: oklch(0.19 0.014 250);
+  --secondary: oklch(0.262 0.016 250);
+  --secondary-foreground: oklch(0.955 0.006 245);
+  --muted: oklch(0.262 0.016 250);
+  --muted-foreground: oklch(0.703 0.021 246);
+  --accent: oklch(0.3 0.022 248);
+  --accent-foreground: oklch(0.965 0.006 245);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.76 0.045 240);
+  --chart-1: oklch(0.87 0.03 240);
+  --chart-2: oklch(0.72 0.045 243);
+  --chart-3: oklch(0.58 0.045 248);
+  --chart-4: oklch(0.44 0.035 250);
+  --chart-5: oklch(0.31 0.025 250);
+  --sidebar: oklch(0.203 0.013 250);
+  --sidebar-foreground: oklch(0.955 0.006 245);
+  --sidebar-primary: oklch(0.76 0.045 240);
+  --sidebar-primary-foreground: oklch(0.19 0.014 250);
+  --sidebar-accent: oklch(0.3 0.022 248);
+  --sidebar-accent-foreground: oklch(0.965 0.006 245);
+  --sidebar-border: oklch(1 0 0 / 9%);
+  --sidebar-ring: oklch(0.76 0.045 240);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    text-rendering: optimizeLegibility;
+  }
+  /* R3F canvas should never intercept scroll on touch devices */
+  canvas {
+    touch-action: pan-y;
+  }
+}
+
+@layer base {
+  html { -webkit-tap-highlight-color: transparent; }
+  body { text-rendering: optimizeLegibility; }
+  canvas { touch-action: pan-y; }
+}
+
+/* Safety net: these 21st.dev blocks start at opacity-0 and rely on an
+   animation to appear. If a user disables motion, show them instantly
+   instead of leaving the hero blank. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-fade-up {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+
+/* ============================================================
+   Helion cosmic hero — spec §3 (rainbow underline) and §5 (orb sweep)
+   ============================================================ */
+
+/* Rainbow spectral underline that sweeps left -> right, 3s linear infinite */
+.rainbow-underline {
+  position: relative;
+  white-space: nowrap;
+}
+.rainbow-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.18em;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    #ff3b30,
+    #ff9500,
+    #ffd60a,
+    #34c759,
+    #00aaff,
+    #0066ff,
+    #af52de,
+    #ff3b30
+  );
+  background-size: 200% 100%;
+  animation: rainbow-sweep 3s linear infinite;
+}
+
+@keyframes rainbow-sweep {
+  from { background-position: 0% 50%; }
+  to   { background-position: 200% 50%; }
+}
+
+/* Orb rim sweep: a bright arc rotating inside a 3px ring mask */
+.orb-sweep {
+  -webkit-mask: radial-gradient(closest-side, transparent 0 94.5%, #000 96%, #000 100%);
+  mask: radial-gradient(closest-side, transparent 0 94.5%, #000 96%, #000 100%);
+}
+.orb-sweep-rotor {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 336deg,
+    rgba(200, 235, 255, 0.55) 348deg,
+    #ffffff 354deg,
+    rgba(200, 235, 255, 0.55) 360deg
+  );
+  animation: orb-sweep 5.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+.group\/orb:hover .orb-sweep-rotor { animation-duration: 3.6s; }
+
+@keyframes orb-sweep {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rainbow-underline::after,
+  .orb-sweep-rotor { animation: none !important; }
+}
+
+
+/* ------------------------------------------------------------------
+   Spec §8 — Nevera / Varino. Commercial fonts, not bundled.
+   Drop the .woff2 into public/fonts/ and uncomment to activate.
+   Falls back to Geist (var(--font-sans)) until then.
+------------------------------------------------------------------- */
+/*
+@font-face {
+  font-family: "Nevera";
+  src: url("/fonts/Nevera.woff2") format("woff2");
+  font-weight: 500 700;
+  font-style: normal;
+  font-display: swap;
+}
+*/
