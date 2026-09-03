@@ -1,22 +1,23 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Instrument_Serif } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { site } from "@/lib/site";
 import "./globals.css";
 
-/** Body / UI face. */
-const geist = Geist({
+/** Body / UI / nav. */
+const inter = Inter({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-sans",
+  weight: ["400", "500", "600"],
+  variable: "--font-inter-src",
 });
 
-/** Display face — matches the hero component's original design. */
-const serif = Instrument_Serif({
+/** Display / headlines / tags. */
+const grotesk = Space_Grotesk({
   subsets: ["latin"],
   display: "swap",
-  weight: "400",
-  variable: "--font-serif-src",
+  weight: ["300", "500", "600", "700"],
+  variable: "--font-grotesk-src",
 });
 
 export const metadata: Metadata = {
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: "#030508",
   colorScheme: "dark",
 };
 
@@ -48,12 +49,12 @@ export default function RootLayout({
       lang="en"
       className={cn(
         "dark h-full scroll-smooth font-sans antialiased",
-        geist.variable,
-        serif.variable,
+        inter.variable,
+        grotesk.variable,
       )}
       suppressHydrationWarning
     >
-      <body className="flex min-h-full flex-col bg-black text-white">
+      <body className="flex min-h-full flex-col bg-void text-white">
         {children}
       </body>
     </html>

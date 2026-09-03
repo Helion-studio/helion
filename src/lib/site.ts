@@ -9,10 +9,11 @@ export const site = {
   email: "hello@helionstudio.com",
   location: "Ibadan · Lagos · Remote-first",
   nav: [
-    { label: "Capabilities", href: "#capabilities" },
+    { label: "Home", href: "#home" },
     { label: "Work", href: "#work" },
-    { label: "Studio", href: "#studio" },
+    { label: "Team", href: "#team" },
     { label: "Process", href: "#process" },
+    { label: "Contact", href: "#contact" },
   ],
   cta: { label: "Start a project", href: "#contact" },
   social: {
