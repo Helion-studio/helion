@@ -1,7 +1,7 @@
 "use client";
 
 import * as THREE from "three";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import type { BloomEffect } from "postprocessing";
@@ -217,9 +217,25 @@ function Arc({
 export function ArcScene() {
   const { shared, mats } = useArcMaterials();
   const bloom = useRef<BloomEffect | null>(null);
+  const host = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(true);
+
+  // the story section below runs its own WebGL layer — park this one
+  // whenever it scrolls out of view
+  useEffect(() => {
+    const el = host.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setActive(e.isIntersecting), {
+      rootMargin: "80px",
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   return (
+    <div ref={host} className="h-full w-full">
     <Canvas
+      frameloop={active ? "always" : "never"}
       flat
       dpr={[1, 1.75]}
       camera={{ position: [0, 0, 7.5], fov: 42 }}
@@ -237,6 +253,7 @@ export function ArcScene() {
         />
       </EffectComposer>
     </Canvas>
+    </div>
   );
 }
 
