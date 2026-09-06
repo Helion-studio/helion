@@ -1,19 +1,25 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Menu, X } from "lucide-react";
 import { site } from "@/lib/site";
-import { useReducedMotion } from "motion/react";
 
 /**
  * Mission-control nav — fixed 72px glass bar. Links muted → bright,
- * ghost pill CTA. Hamburger exists on mobile only (never on desktop).
+ * active route carries the cyan tick, ghost pill CTA. Hamburger on
+ * mobile only (never on desktop).
  */
 export function Navbar() {
   const rm = useReducedMotion();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
     <motion.header
@@ -24,34 +30,40 @@ export function Navbar() {
     >
       <nav className="mx-auto flex h-full max-w-7xl items-center justify-between px-5 md:px-8">
         {/* logotype */}
-        <a href="#home" className="flex items-center gap-2.5" aria-label="Helion Studio — home">
+        <Link href="/" className="flex items-center gap-2.5" aria-label="Top-notch Team — home">
           <Image src="/logo.png" alt="" width={28} height={28} className="h-7 w-7 object-contain" priority />
-          <span className="font-display text-[1rem] font-semibold tracking-tight text-white">
-            Helion Studio
+          <span className="font-display text-[0.95rem] font-semibold tracking-tight text-white">
+            Top-notch <span className="text-white/50">Team</span>
           </span>
-        </a>
+        </Link>
 
         {/* center links — desktop only */}
         <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 md:flex">
           {site.nav.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
-              className="text-nav font-medium text-white/40 transition-colors duration-200 hover:text-white"
+              aria-current={isActive(link.href) ? "page" : undefined}
+              className={`flex items-center gap-1.5 text-nav font-medium transition-colors duration-200 ${
+                isActive(link.href) ? "text-white" : "text-white/40 hover:text-white"
+              }`}
             >
+              {isActive(link.href) && (
+                <span aria-hidden className="size-1 rounded-full bg-energy" />
+              )}
               {link.label}
-            </a>
+            </Link>
           ))}
         </div>
 
         {/* CTA + mobile toggle */}
         <div className="flex items-center gap-3">
-          <a
+          <Link
             href={site.cta.href}
             className="hidden rounded-full border border-white/10 px-4 py-2 font-display text-nav font-medium text-white transition-colors duration-200 hover:border-white/20 hover:bg-white/[0.07] sm:inline-flex"
           >
             {site.cta.label}
-          </a>
+          </Link>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
@@ -72,26 +84,28 @@ export function Navbar() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="overflow-hidden border-t border-white/[0.06] bg-[rgba(3,5,8,0.9)] backdrop-blur-[12px] md:hidden"
+            className="overflow-hidden border-t border-white/[0.06] bg-[rgba(3,5,8,0.92)] backdrop-blur-[12px] md:hidden"
           >
             <div className="flex flex-col gap-1 px-5 py-4">
               {site.nav.map((link) => (
-                <a
+                <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className="rounded-lg px-3 py-2.5 text-nav font-medium text-white/60 transition-colors hover:bg-white/[0.05] hover:text-white"
+                  className={`rounded-lg px-3 py-2.5 text-nav font-medium transition-colors hover:bg-white/[0.05] hover:text-white ${
+                    isActive(link.href) ? "text-white" : "text-white/60"
+                  }`}
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
-              <a
+              <Link
                 href={site.cta.href}
                 onClick={() => setOpen(false)}
                 className="mt-2 rounded-full border border-white/10 px-4 py-2.5 text-center font-display text-nav font-medium text-white transition-colors hover:border-white/20 hover:bg-white/[0.07]"
               >
                 {site.cta.label}
-              </a>
+              </Link>
             </div>
           </motion.div>
         )}

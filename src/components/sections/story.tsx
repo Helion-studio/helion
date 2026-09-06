@@ -2,21 +2,23 @@
 
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import { useEffect, useRef } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 
 /**
- * THE SPRING STAIRCASE — Helion's story section.
+ * THE SPRING STAIRCASE — Top-notch Team's story section.
  *
- * Raw Three.js (no R3F, no physics engine, no texture files — every surface
- * is code) mounted in an effect. A helix of 80 instanced steps; a glowing
- * fresnel sphere travels down it, bouncing step-to-step on a sine arc,
- * driven deterministically by scroll position and smoothed with lerp(0.12).
+ * Raw Three.js (no R3F, no physics, no texture files). A helix of 80 rounded
+ * steps with a glowing rim on every tread's outer edge; an upgraded fresnel
+ * energy sphere — animated surface veins, hot core, layered glow shells and
+ * a travelling light — bounces down the helix, driven deterministically by
+ * scroll and smoothed with lerp(0.12).
  *
- * Structure: a tall scroll track (3 × 120vh panels) with a sticky 100svh
- * canvas behind it — the section-level equivalent of the spec's fixed
- * canvas, scoped so it never fights the hero's WebGL layer.
+ * Layout: desktop → the canvas owns the RIGHT half of the screen, content
+ * panels ride the left half. Mobile → canvas full-width behind adjusted
+ * solid dark panels.
  *
  * Panels: the team → the goal → how we help clients.
  */
@@ -29,18 +31,20 @@ const STEP_WIDTH = 2.4;
 const STEP_DEPTH = 1.2;
 const STEP_HEIGHT = 0.25;
 const BALL_RADIUS = 0.42;
-const ON_STEP = STEP_HEIGHT / 2 + BALL_RADIUS + 0.01; // ball sits ON the tread
+const ON_STEP = STEP_HEIGHT / 2 + BALL_RADIUS + 0.01;
 
 const ballVertex = /* glsl */ `
   uniform float uTime;
   varying vec3 vNormal;
   varying vec3 vWorldPosition;
+  varying vec3 vPos;
 
   void main() {
     vec3 transformed = position;
     float wave = sin(position.x * 5.0 + uTime * 2.0) * 0.015;
     transformed += normal * wave;
 
+    vPos = position;
     vNormal = normalize(normalMatrix * normal);
     vec4 worldPosition = modelMatrix * vec4(transformed, 1.0);
     vWorldPosition = worldPosition.xyz;
@@ -52,21 +56,33 @@ const ballFragment = /* glsl */ `
   uniform float uTime;
   varying vec3 vNormal;
   varying vec3 vWorldPosition;
+  varying vec3 vPos;
 
   void main() {
     vec3 viewDirection = normalize(cameraPosition - vWorldPosition);
     float fresnel = pow(1.0 - max(dot(normalize(vNormal), viewDirection), 0.0), 3.0);
     float pulse = 0.5 + 0.5 * sin(uTime * 2.0);
 
-    vec3 baseColor = vec3(0.15, 0.5, 1.0);
-    vec3 glowColor = vec3(0.3, 0.8, 1.0);
-    vec3 color = baseColor + glowColor * fresnel * (0.6 + pulse * 0.4);
+    // slow circulating energy veins across the surface
+    float veins =
+      sin(vPos.x * 8.0 + uTime * 1.2) *
+      sin(vPos.y * 7.0 - uTime * 0.9) *
+      sin(vPos.z * 9.0 + uTime * 0.6);
+
+    vec3 baseColor = vec3(0.10, 0.34, 0.85);
+    vec3 glowColor = vec3(0.30, 0.80, 1.00);
+    vec3 hotColor  = vec3(0.85, 0.95, 1.00);
+
+    vec3 color = baseColor;
+    color += glowColor * fresnel * (0.6 + pulse * 0.4);            // rim energy
+    color += hotColor * smoothstep(0.55, 0.95, veins) * 0.35;      // veins
+    color += hotColor * pow(1.0 - fresnel, 2.0) * 0.22;            // hot core
 
     gl_FragColor = vec4(color, 1.0);
   }
 `;
 
-/** Scroll-driven Three scene. Returns nothing; owns its full lifecycle. */
+/** Scroll-driven Three scene. Owns its full lifecycle. */
 function useStaircaseScene(
   hostRef: React.RefObject<HTMLDivElement | null>,
   hudRef: React.RefObject<HTMLSpanElement | null>,
@@ -87,7 +103,7 @@ function useStaircaseScene(
         powerPreference: "high-performance",
       });
     } catch {
-      return; // no WebGL — panels still render, staircase simply absent
+      return;
     }
 
     const fine = window.matchMedia("(pointer: fine)").matches;
@@ -95,37 +111,29 @@ function useStaircaseScene(
     renderer.setSize(host.clientWidth, host.clientHeight);
     renderer.setClearColor(0x000000, 0);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
+    renderer.toneMappingExposure = 1.15;
     host.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x030508, 0.04); // the helix reveals itself through fog
+    scene.fog = new THREE.FogExp2(0x030508, 0.038);
 
-    const camera = new THREE.PerspectiveCamera(
-      45,
-      host.clientWidth / host.clientHeight,
-      0.1,
-      100,
-    );
-    camera.position.set(9, 6, 9);
+    const camera = new THREE.PerspectiveCamera(45, host.clientWidth / host.clientHeight, 0.1, 100);
 
-    // code-generated environment lighting — reflections without a single texture file
     const pmrem = new THREE.PMREMGenerator(renderer);
     const envTexture = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
     scene.environment = envTexture;
     scene.environmentIntensity = 0.4;
     pmrem.dispose();
 
-    // lights
     scene.add(new THREE.AmbientLight(0xffffff, 0.4));
     const keyLight = new THREE.DirectionalLight(0xffffff, 2);
     keyLight.position.set(5, 10, 5);
     scene.add(keyLight);
-    const rim = new THREE.DirectionalLight(0x3b82f6, 0.8); // Helion-blue sheen on the metal
+    const rim = new THREE.DirectionalLight(0x3b82f6, 0.9);
     rim.position.set(-6, 2, -4);
     scene.add(rim);
 
-    // staircase — one InstancedMesh, one draw call
+    // staircase geometry — rounded treads + a glowing rim strip per step
     const totalAngle = Math.PI * 2 * TURNS;
     const angleStep = totalAngle / (STEP_COUNT - 1);
     const stepPositions: THREE.Vector3[] = [];
@@ -142,13 +150,33 @@ function useStaircaseScene(
       stepAngles.push(angle);
     }
 
-    const stepGeometry = new THREE.BoxGeometry(STEP_WIDTH, STEP_HEIGHT, STEP_DEPTH);
+    const stepGeometry = new RoundedBoxGeometry(
+      STEP_WIDTH,
+      STEP_HEIGHT,
+      STEP_DEPTH,
+      2,
+      0.045,
+    );
     const stepMaterial = new THREE.MeshStandardMaterial({
-      color: 0x202025,
-      roughness: 0.32,
-      metalness: 0.45,
+      color: 0x1c2129,
+      roughness: 0.28,
+      metalness: 0.55,
     });
     const stairs = new THREE.InstancedMesh(stepGeometry, stepMaterial, STEP_COUNT);
+
+    // rim light: thin bar pre-translated onto the tread's outer edge,
+    // so it shares the exact same instance matrices as the steps
+    const rimGeometry = new THREE.BoxGeometry(0.035, 0.055, STEP_DEPTH * 0.92);
+    rimGeometry.translate(STEP_WIDTH / 2 - 0.035, 0.02, 0);
+    const rimMaterial = new THREE.MeshBasicMaterial({
+      color: 0x3b82f6,
+      transparent: true,
+      opacity: 0.85,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const rims = new THREE.InstancedMesh(rimGeometry, rimMaterial, STEP_COUNT);
+
     const M = new THREE.Matrix4();
     const Q = new THREE.Quaternion();
     const E = new THREE.Euler();
@@ -158,15 +186,17 @@ function useStaircaseScene(
       Q.setFromEuler(E);
       M.compose(p, Q, ONE);
       stairs.setMatrixAt(i, M);
+      rims.setMatrixAt(i, M);
     });
     stairs.instanceMatrix.needsUpdate = true;
-    scene.add(stairs);
+    rims.instanceMatrix.needsUpdate = true;
+    scene.add(stairs, rims);
 
-    // ball — shader sphere + additive glow shell + travelling light + micro-dust
+    // the ball — shader core + two glow shells + light + micro-dust
     const ball = new THREE.Group();
     const ballUniforms = { uTime: { value: 0 } };
     const ballMesh = new THREE.Mesh(
-      new THREE.SphereGeometry(BALL_RADIUS, 32, 32),
+      new THREE.SphereGeometry(BALL_RADIUS, 48, 48),
       new THREE.ShaderMaterial({
         vertexShader: ballVertex,
         fragmentShader: ballFragment,
@@ -175,27 +205,36 @@ function useStaircaseScene(
     );
     ball.add(ballMesh);
 
-    const glow = new THREE.Mesh(
-      new THREE.SphereGeometry(0.65, 24, 24),
+    const glowA = new THREE.Mesh(
+      new THREE.SphereGeometry(0.62, 24, 24),
       new THREE.MeshBasicMaterial({
         color: 0x44aaff,
         transparent: true,
-        opacity: 0.12,
+        opacity: 0.16,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       }),
     );
-    ball.add(glow);
-    ball.add(new THREE.PointLight(0x44aaff, 5, 8));
+    const glowB = new THREE.Mesh(
+      new THREE.SphereGeometry(1.05, 24, 24),
+      new THREE.MeshBasicMaterial({
+        color: 0x2b6fd4,
+        transparent: true,
+        opacity: 0.06,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      }),
+    );
+    ball.add(glowA, glowB);
+    ball.add(new THREE.PointLight(0x44aaff, 8, 10));
 
     const dustCount = 150;
     const dustPositions = new Float32Array(dustCount * 3);
     for (let i = 0; i < dustCount; i++) {
-      const r = 0.9 + Math.random() * 1.4;
+      const r = 0.9 + Math.random() * 1.5;
       const a = Math.random() * Math.PI * 2;
-      const y = (Math.random() - 0.5) * 2.2;
       dustPositions[i * 3] = Math.cos(a) * r;
-      dustPositions[i * 3 + 1] = y;
+      dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 2.4;
       dustPositions[i * 3 + 2] = Math.sin(a) * r;
     }
     const dust = new THREE.Points(
@@ -215,11 +254,18 @@ function useStaircaseScene(
     ball.add(dust);
     scene.add(ball);
 
-    // scroll → progress (scoped to this section, not the document)
+    // scroll → progress, scoped to this section
     let scrollStart = 0;
     let scrollEnd = 1;
     let targetProgress = 0;
     let currentProgress = 0;
+    let camDist = 1;
+
+    const frame = () => {
+      // half-width canvas on desktop needs more reach; portrait mobile even more
+      const aspect = host.clientWidth / Math.max(1, host.clientHeight);
+      camDist = aspect < 0.8 ? 1.45 : aspect < 1.1 ? 1.25 : 1;
+    };
 
     const measure = () => {
       const rect = section.getBoundingClientRect();
@@ -238,16 +284,20 @@ function useStaircaseScene(
       camera.aspect = host.clientWidth / host.clientHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(host.clientWidth, host.clientHeight);
+      frame();
       measure();
       onScroll();
     };
 
+    const applyCamera = (progress: number) => {
+      camera.position.set(9 * camDist, 5 + progress * 5, 9 * camDist);
+    };
+
     measure();
-    onScroll();
+    onResize();
     window.addEventListener("resize", onResize, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
 
-    // pause whenever the section leaves the viewport
     let visible = true;
     let raf = 0;
     const io = new IntersectionObserver(([entry]) => {
@@ -266,12 +316,10 @@ function useStaircaseScene(
       const index = Math.min(Math.floor(position), STEP_COUNT - 2);
       const t = position - index;
 
-      const from = stepPositions[index];
-      const to = stepPositions[index + 1];
-      ball.position.lerpVectors(from, to, t);
-      ball.position.y += Math.sin(t * Math.PI) * 0.8 + ON_STEP; // the bounce arc
+      ball.position.lerpVectors(stepPositions[index], stepPositions[index + 1], t);
+      ball.position.y += Math.sin(t * Math.PI) * 0.8 + ON_STEP;
 
-      const airborne = Math.sin(t * Math.PI); // spin faster mid-flight
+      const airborne = Math.sin(t * Math.PI);
       ballMesh.rotation.x += 0.016 * 5 * (1 + airborne * 0.6);
       ballMesh.rotation.z += 0.016 * 3 * (1 + airborne * 0.6);
 
@@ -287,7 +335,7 @@ function useStaircaseScene(
       raf = requestAnimationFrame(tick);
       if (!visible || document.hidden) return;
 
-      const delta = Math.min(clock.getDelta(), 0.05);
+      clock.getDelta();
       const t = clock.elapsedTime;
       ballUniforms.uTime.value = t;
       dust.rotation.y = t * 0.12;
@@ -295,7 +343,7 @@ function useStaircaseScene(
       currentProgress = THREE.MathUtils.lerp(currentProgress, targetProgress, 0.12);
       placeBall();
 
-      camera.position.y = 5 + currentProgress * 5;
+      applyCamera(currentProgress);
       desiredTarget.set(0, currentProgress * TOTAL_HEIGHT * 0.5, 0);
       cameraTarget.lerp(desiredTarget, 0.06);
       camera.lookAt(cameraTarget);
@@ -306,10 +354,9 @@ function useStaircaseScene(
     };
 
     if (reduced) {
-      // static composition — ball resting a few steps down, rendered once
       currentProgress = 0.12;
       placeBall();
-      camera.position.y = 5 + currentProgress * 5;
+      applyCamera(currentProgress);
       cameraTarget.set(0, currentProgress * TOTAL_HEIGHT * 0.5, 0);
       camera.lookAt(cameraTarget);
       if (hudRef.current) hudRef.current.textContent = `STEP 010 / ${STEP_COUNT}`;
@@ -324,14 +371,14 @@ function useStaircaseScene(
       io.disconnect();
       window.removeEventListener("resize", onResize);
       window.removeEventListener("scroll", onScroll);
-      dust.geometry.dispose();
-      (dust.material as THREE.Material).dispose();
-      ballMesh.geometry.dispose();
-      (ballMesh.material as THREE.Material).dispose();
-      glow.geometry.dispose();
-      (glow.material as THREE.Material).dispose();
+      [dust, glowA, glowB, ballMesh].forEach((o) => {
+        o.geometry.dispose();
+        ((o as THREE.Mesh).material as THREE.Material).dispose();
+      });
       stepGeometry.dispose();
       stepMaterial.dispose();
+      rimGeometry.dispose();
+      rimMaterial.dispose();
       envTexture.dispose();
       renderer.dispose();
       if (renderer.domElement.parentNode === host) host.removeChild(renderer.domElement);
@@ -343,11 +390,11 @@ function useStaircaseScene(
 /*  Content                                                            */
 /* ------------------------------------------------------------------ */
 
-const TEAM = [
-  { name: "Alex", role: "Systems & real-time infrastructure", shade: "#0b1e3f", period: 3.2 },
-  { name: "Sam", role: "Product engineering & interfaces", shade: "#123a6b", period: 3.8 },
-  { name: "Jordan", role: "Developer tooling & platforms", shade: "#0d2848", period: 4.4 },
-  { name: "Casey", role: "Performance & reliability", shade: "#10315e", period: 5.0 },
+const DISCIPLINES = [
+  "Systems & infrastructure",
+  "Product interfaces",
+  "Developer tooling",
+  "Performance & reliability",
 ];
 
 const HELP = [
@@ -366,29 +413,21 @@ const HELP = [
 ];
 
 function Panel({
-  align,
   tag,
   children,
-  className,
 }: {
-  align: "left" | "right";
   tag: string;
   children: React.ReactNode;
-  className?: string;
 }) {
   const rm = useReducedMotion();
   return (
-    <div
-      className={`flex min-h-[120svh] items-center px-5 md:px-12 ${
-        align === "left" ? "justify-start" : "justify-end"
-      }`}
-    >
+    <div className="flex min-h-[115svh] items-center px-5 md:px-12">
       <motion.div
         initial={rm ? false : { opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-12% 0px" }}
         transition={rm ? { duration: 0 } : { duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className={`w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.03] p-8 backdrop-blur-md md:p-10 ${className ?? ""}`}
+        className="w-full max-w-md rounded-2xl border border-white/10 bg-[#0a0e15] p-8 shadow-[0_24px_80px_rgba(0,0,0,0.45)] md:p-10 lg:max-w-lg"
       >
         <p className="flex items-center gap-2 font-display text-tag font-medium tracking-[0.08em] text-white/40 uppercase">
           <span aria-hidden className="size-[5px] rounded-full bg-energy" />
@@ -410,14 +449,13 @@ export function Story() {
 
   return (
     <section ref={sectionRef} id="team" className="relative bg-void" aria-label="Our story">
-      {/* sticky 3D backdrop */}
+      {/* sticky 3D backdrop — right half on desktop, full-bleed on mobile */}
       <div className="sticky top-0 h-svh overflow-hidden">
-        <div ref={hostRef} className="absolute inset-0" aria-hidden />
-        {/* edge fades so the helix melts into the page void */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-void to-transparent" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-void to-transparent" />
+        <div className="absolute inset-y-0 right-0 w-full md:w-1/2" ref={hostRef} aria-hidden />
+        {/* blends the canvas into the page void */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-full bg-gradient-to-b from-void via-transparent to-void md:w-1/2 md:bg-gradient-to-r md:from-void md:via-void/60 md:to-transparent" />
         {/* flight HUD */}
-        <div className="pointer-events-none absolute bottom-6 left-5 flex items-center gap-3 md:left-12">
+        <div className="pointer-events-none absolute right-5 bottom-6 flex items-center gap-3 md:right-[52%]">
           <span
             ref={hudRef}
             className="font-mono text-micro tracking-[0.14em] text-white/50 uppercase"
@@ -427,63 +465,56 @@ export function Story() {
           <div className="h-px w-28 overflow-hidden bg-white/10 md:w-40">
             <div
               ref={barRef}
-              className="h-full w-full origin-left scale-x-0 bg-arc"
+              className="h-full w-full origin-left bg-arc"
               style={{ transform: "scaleX(0)" }}
             />
           </div>
         </div>
       </div>
 
-      {/* scrolling panels over the staircase */}
+      {/* panels ride the left half on desktop, overlay full-width on mobile */}
       <div className="relative">
         {/* the team */}
-        <Panel align="left" tag="The team">
+        <Panel tag="The team">
           <h2 className="mt-5 font-display text-section leading-[1.05] font-light tracking-[-0.02em] text-white">
-            Four builders.
+            A tight core.
             <br />
-            Zero handoffs.
+            <span className="font-medium">A deep bench.</span>
           </h2>
           <p className="mt-5 max-w-[46ch] text-body leading-relaxed tracking-[-0.01em] text-white/65">
-            Helion is deliberately small. The people you meet on day one are the people who ship —
-            no account managers, no layers, no telephone game. Senior engineers who own outcomes
-            end to end.
+            Top-notch Team ships as one crew. No account layers, no telephone game — you talk
+            directly to the people writing the code. And when the work grows, the bench behind us
+            grows with it.
           </p>
-          <ul className="mt-8 space-y-4">
-            {TEAM.map((m) => (
-              <li key={m.name} className="flex items-center gap-4">
-                <span
-                  aria-hidden
-                  className="flex size-9 shrink-0 items-center justify-center rounded-full font-display text-[13px] font-medium text-[#cfe4ff] ring-2 ring-void"
-                  style={{ backgroundColor: m.shade }}
-                >
-                  {m.name[0]}
-                </span>
-                <span className="text-body font-medium text-white">{m.name}</span>
-                <span className="text-micro tracking-wide text-white/45 uppercase">{m.role}</span>
+          <ul className="mt-8 flex flex-wrap gap-2.5">
+            {DISCIPLINES.map((d) => (
+              <li
+                key={d}
+                className="rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-micro font-medium tracking-[0.06em] text-white/60 uppercase"
+              >
+                {d}
               </li>
             ))}
           </ul>
         </Panel>
 
         {/* the goal */}
-        <Panel align="right" tag="Our goal">
+        <Panel tag="Our goal">
           <h2 className="mt-5 font-display text-section leading-[1.05] font-light tracking-[-0.02em] text-white">
-            Software that feels instant —{" "}
-            <span className="font-medium">and holds under load.</span>
+            Make software feel <span className="font-medium">like thought.</span>
           </h2>
           <p className="mt-5 max-w-[46ch] text-body leading-relaxed tracking-[-0.01em] text-white/65">
-            We build the kind of software people forget exists — real-time platforms and tooling
-            that respond in milliseconds and stay boringly reliable at 3 a.m. Speed is the
-            feature. Reliability is the promise.
+            Everything we ship is measured by one question: does it respond before doubt sets in?
+            Milliseconds compound into trust — and trust compounds into products people rely on
+            without thinking.
           </p>
           <p className="mt-4 max-w-[46ch] text-body leading-relaxed tracking-[-0.01em] text-white/65">
-            Every decision — architecture, interface, infrastructure — is measured against one
-            question: does this feel immediate on every device a client touches?
+            Speed is the feature. Reliability is the craft. Everything else is detail.
           </p>
         </Panel>
 
         {/* how we help */}
-        <Panel align="left" tag="How we help">
+        <Panel tag="How we help">
           <h2 className="mt-5 font-display text-section leading-[1.05] font-light tracking-[-0.02em] text-white">
             Build. Level up. <span className="font-medium">Rescue.</span>
           </h2>
@@ -499,7 +530,7 @@ export function Story() {
             ))}
           </ul>
           <a
-            href="#contact"
+            href="/contact"
             className="group mt-9 inline-flex items-center gap-2 font-display text-nav font-medium text-white transition-colors hover:text-accent"
           >
             Start a project

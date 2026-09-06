@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="8c9c9de2-560c-428a-b23b-893e6ed0ed5d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/sections/hero.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/sections/hero.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/sections/navbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/sections/navbar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/sections/story.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/sections/story.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/site.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/site.ts" afterDir="false" />
+    </list>
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+    <option name="SHOW_DIALOG" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="PATH_TO_GIT" value="/data/data/org.smartide.code/files/usr/bin/git" />
+  </component>
+</project>
