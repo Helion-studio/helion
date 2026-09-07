@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server";
 import { recordMessage } from "@/lib/db";
+import { getSupabase } from "@/lib/supabase";
+import { sendEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
 /**
- * POST /api/contact — stores a project inquiry in SQLite (messages table).
+ * POST /api/contact — project inquiry from the contact form.
+ * Stores in Supabase `inquiries` (fallback: SQLite `messages`) and
+ * notifies the team by email (Resend when keyed, outbox otherwise).
  */
 export async function POST(req: Request) {
   try {
@@ -18,8 +22,29 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: "invalid payload" }, { status: 400 });
     }
 
-    const ok = recordMessage({ name, email, company, brief });
-    return NextResponse.json({ ok }, { status: ok ? 200 : 500 });
+    const sb = getSupabase();
+    if (sb) {
+      try {
+        await sb.from("inquiries").insert({
+          source: "form",
+          name,
+          email,
+          company: company ?? null,
+          brief,
+        });
+      } catch {
+        recordMessage({ name, email, company, brief });
+      }
+    } else {
+      recordMessage({ name, email, company, brief });
+    }
+
+    await sendEmail(
+      `📩 New project inquiry — ${name}${company ? ` (${company})` : ""}`,
+      `NAME: ${name}\nEMAIL: ${email}\nCOMPANY: ${company ?? "—"}\n\nBRIEF:\n${brief}`,
+    );
+
+    return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ ok: false, error: "bad request" }, { status: 400 });
   }

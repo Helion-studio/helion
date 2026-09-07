@@ -61,6 +61,15 @@ function getDb(): Database.Database | null {
         brief      TEXT NOT NULL,
         read       INTEGER NOT NULL DEFAULT 0
       );
+      CREATE TABLE IF NOT EXISTS email_outbox (
+        id         INTEGER PRIMARY KEY AUTOINCREMENT,
+        created_at TEXT NOT NULL,
+        to_address TEXT NOT NULL,
+        subject    TEXT NOT NULL,
+        body       TEXT NOT NULL,
+        delivered  INTEGER NOT NULL DEFAULT 0,
+        provider   TEXT
+      );
     `);
     return db;
   } catch {
@@ -142,6 +151,57 @@ export function recordMessage(p: MessagePayload): boolean {
       company: p.company ? String(p.company).slice(0, 160) : null,
       brief: p.brief.slice(0, 4000),
     });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Email outbox — every notification we attempted (delivered or stored-only). */
+export function recordOutbox(
+  to: string,
+  subject: string,
+  body: string,
+  delivered: boolean,
+  provider: string | null,
+): boolean {
+  const d = getDb();
+  if (!d) return false;
+  try {
+    d.prepare(
+      `INSERT INTO email_outbox (created_at, to_address, subject, body, delivered, provider)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+    ).run(now(), to, subject.slice(0, 300), body.slice(0, 20000), delivered ? 1 : 0, provider);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Chat handoff / booking fallback when Supabase isn't configured. */
+export function recordHandoff(args: {
+  source: "chat" | "booking";
+  name?: string;
+  email?: string;
+  brief: string;
+  summary?: string;
+  transcript?: string;
+}): boolean {
+  const d = getDb();
+  if (!d) return false;
+  try {
+    d.prepare(
+      `INSERT INTO messages (created_at, name, email, company, brief)
+       VALUES (?, ?, ?, ?, ?)`,
+    ).run(
+      now(),
+      args.name?.slice(0, 120) || "Chat visitor",
+      args.email?.slice(0, 200) || "(no email left)",
+      `[${args.source}]`,
+      (args.summary ? `SUMMARY: ${args.summary}\n\n` : "") +
+        args.brief.slice(0, 3000) +
+        (args.transcript ? `\n\n--- TRANSCRIPT ---\n${args.transcript.slice(0, 12000)}` : ""),
+    );
     return true;
   } catch {
     return false;

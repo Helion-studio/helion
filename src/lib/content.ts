@@ -4,18 +4,28 @@
  */
 
 export type Project = {
+  slug: string;
   name: string;
   category: string;
   year: string;
   blurb: string;
   detail: string;
+  type: "web" | "software";
   metrics: { k: string; label: string }[];
   stack: string[];
+  thumbnail: string;      // local path (seed) — Supabase rows use thumbnail_url
+  repoUrl: string;        // GitHub repo — software/backend projects link here
+  viewerUrl?: string;     // embeddable deployment — web projects render in an iframe
 };
 
 export const projects: Project[] = [
   {
     name: "Ledgerline",
+    slug: "ledgerline",
+    type: "web" as const,
+    thumbnail: "/work/ledgerline.jpg",
+    repoUrl: "https://github.com/topnotchteam/ledgerline",
+    viewerUrl: "/work/demos/ledgerline/index.html",
     category: "Real-time fintech platform",
     year: "2025",
     blurb: "A payments operations desk that streams live ledger events instead of refreshing dashboards.",
@@ -30,6 +40,10 @@ export const projects: Project[] = [
   },
   {
     name: "Forge CLI",
+    slug: "forge-cli",
+    type: "software" as const,
+    thumbnail: "/work/forge-cli.jpg",
+    repoUrl: "https://github.com/topnotchteam/forge-cli",
     category: "Developer tooling",
     year: "2025",
     blurb: "A command-line toolchain that turned a 40-minute release ritual into a four-minute one.",
@@ -44,6 +58,10 @@ export const projects: Project[] = [
   },
   {
     name: "Atlas Relay",
+    slug: "atlas-relay",
+    type: "software" as const,
+    thumbnail: "/work/atlas-relay.jpg",
+    repoUrl: "https://github.com/topnotchteam/atlas-relay",
     category: "IoT telemetry platform",
     year: "2024",
     blurb: "Telemetry ingestion for 60k field devices — readable, replayable, and boringly stable.",
@@ -58,6 +76,10 @@ export const projects: Project[] = [
   },
   {
     name: "Northwind",
+    slug: "northwind",
+    type: "web" as const,
+    thumbnail: "/work/northwind.jpg",
+    repoUrl: "https://github.com/topnotchteam/northwind",
     category: "Marketplace rebuild",
     year: "2024",
     blurb: "A storefront so heavy customers left before the homepage painted. Now it lands in under a second.",
@@ -72,6 +94,10 @@ export const projects: Project[] = [
   },
   {
     name: "Quorum",
+    slug: "quorum",
+    type: "web" as const,
+    thumbnail: "/work/quorum.jpg",
+    repoUrl: "https://github.com/topnotchteam/quorum",
     category: "Collaboration platform",
     year: "2023",
     blurb: "A multiplayer canvas where sixty cursors feel like one fluid conversation.",
@@ -86,6 +112,10 @@ export const projects: Project[] = [
   },
   {
     name: "Beacon",
+    slug: "beacon",
+    type: "software" as const,
+    thumbnail: "/work/beacon.jpg",
+    repoUrl: "https://github.com/topnotchteam/beacon",
     category: "Status & incident platform",
     year: "2023",
     blurb: "Incident management that turns 3 a.m. chaos into a checklist that runs itself.",

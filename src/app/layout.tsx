@@ -5,6 +5,7 @@ import { site } from "@/lib/site";
 import { Navbar } from "@/components/sections/navbar";
 import { Footer } from "@/components/sections/footer";
 import { VisitTracker } from "@/components/visit-tracker";
+import { ChatWidget } from "@/components/chat-widget";
 import "./globals.css";
 
 /** Display / headlines / tags — crisp premium-tech (free alt to the Nevera look). */
@@ -62,6 +63,7 @@ export default function RootLayout({
         {children}
         <Footer />
         <VisitTracker />
+        <ChatWidget />
       </body>
     </html>
   );

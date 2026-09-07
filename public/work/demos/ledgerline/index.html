@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ledgerline — live demo</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #030508; --panel: #0a0e15; --line: rgba(255,255,255,.07);
+    --txt: #fff; --dim: rgba(255,255,255,.45); --blue: #3b82f6; --cyan: #22d3ee; --ok: #34d399;
+  }
+  body {
+    background: var(--bg); color: var(--txt);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh; display: flex; flex-direction: column;
+  }
+  header {
+    display: flex; align-items: center; gap: 10px; padding: 14px 20px;
+    border-bottom: 1px solid var(--line); background: rgba(10,14,21,.8);
+    position: sticky; top: 0; backdrop-filter: blur(8px);
+  }
+  .logo { width: 22px; height: 22px; border-radius: 6px; background: linear-gradient(135deg, #1e3a8a, #3b82f6); }
+  .name { font-weight: 600; letter-spacing: -.01em; font-size: 14px; }
+  .name span { color: var(--dim); font-weight: 400; }
+  .live { margin-left: auto; display: flex; align-items: center; gap: 7px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--cyan); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: scale(1); opacity: 1 } 50% { transform: scale(1.35); opacity: .55 } }
+  .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border-bottom: 1px solid var(--line); }
+  .kpi { background: var(--bg); padding: 16px 20px; }
+  .kpi b { display: block; font-size: clamp(18px, 3vw, 26px); font-weight: 600; letter-spacing: -.02em; }
+  .kpi i { font-style: normal; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+  main { flex: 1; display: grid; grid-template-rows: auto 1fr; min-height: 0; }
+  .chart { padding: 14px 20px 6px; border-bottom: 1px solid var(--line); }
+  .chart p { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); margin-bottom: 8px; }
+  canvas { width: 100%; height: 72px; display: block; }
+  .feed { overflow: hidden; padding: 10px 20px 18px; }
+  .row {
+    display: grid; grid-template-columns: minmax(90px, 1.1fr) 1.4fr minmax(80px, .9fr) 60px 70px;
+    gap: 10px; align-items: center; padding: 10px 12px; border-radius: 10px;
+    font-size: 12.5px; animation: slidein .35s ease; margin-top: 6px;
+    background: rgba(255,255,255,.025); border: 1px solid transparent;
+  }
+  @keyframes slidein { from { opacity: 0; transform: translateY(-8px) } to { opacity: 1; transform: none } }
+  .row .id { font-family: ui-monospace, "SF Mono", Menlo, monospace; color: rgba(255,255,255,.6); font-size: 11px; }
+  .row .acct { font-weight: 500; }
+  .row .amt { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .row .lat { font-family: ui-monospace, Menlo, monospace; color: var(--dim); font-size: 11px; text-align: right; }
+  .badge { justify-self: end; font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; background: rgba(52,211,153,.12); color: var(--ok); }
+  .badge.p { background: rgba(59,130,246,.14); color: #93c5fd; }
+  .badge.f { background: rgba(248,113,113,.12); color: #f87171; }
+  footer { padding: 10px 20px; border-top: 1px solid var(--line); font-size: 10.5px; color: var(--dim); display: flex; justify-content: space-between; }
+  footer b { color: rgba(255,255,255,.7); font-weight: 500; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="logo"></div>
+    <div class="name">Ledgerline <span>· payments ops</span></div>
+    <div class="live"><span class="dot"></span> streaming</div>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi"><b id="eps">1,204,318</b><i>events / min</i></div>
+    <div class="kpi"><b id="p95">38ms</b><i>p95 latency</i></div>
+    <div class="kpi"><b>99.99%</b><i>uptime (90d)</i></div>
+  </div>
+
+  <main>
+    <div class="chart">
+      <p>Throughput — events/s</p>
+      <canvas id="spark" width="1200" height="72"></canvas>
+    </div>
+    <div class="feed" id="feed"></div>
+  </main>
+
+  <footer>
+    <span>Embedded live demo — <b>Top-notch Team</b></span>
+    <span id="count">0 events rendered</span>
+  </footer>
+
+<script>
+  const feed = document.getElementById('feed');
+  const names = ['Kuda Microfinance','Paystack Rail','GTBank Ops','Flutterwave Hub','Moniepoint','Zenith Clearing','OPay Node','Palmpay Grid','Wema AltBank','Chipper Cash'];
+  const kinds = ['SETTLEMENT','PAYOUT','REVERSAL','AUTH','TRANSFER'];
+  let n = 48100, rendered = 0;
+
+  const fmt = new Intl.NumberFormat('en-NG');
+  function row() {
+    n += Math.floor(Math.random() * 7) + 1;
+    const kind = kinds[(Math.random() * kinds.length) | 0];
+    const ok = Math.random() > .06;
+    const r = document.createElement('div');
+    r.className = 'row';
+    r.innerHTML =
+      '<span class="id">TXN-' + n.toString(36).toUpperCase().padStart(6, '0') + '</span>' +
+      '<span class="acct">' + names[(Math.random() * names.length) | 0] + '</span>' +
+      '<span class="amt">₦' + fmt.format(((Math.random() * 900000 + 500) | 0)) + '</span>' +
+      '<span class="lat">' + (22 + (Math.random() * 30 | 0)) + 'ms</span>' +
+      '<span class="badge' + (ok ? (Math.random() > .7 ? ' p' : '') : ' f') + '">' + (ok ? 'OK' : 'RETRY') + '</span>';
+    feed.prepend(r);
+    while (feed.children.length > 14) feed.lastChild.remove();
+    document.getElementById('count').textContent = (++rendered) + ' events rendered';
+  }
+  for (let i = 0; i < 10; i++) row();
+  setInterval(row, 750);
+
+  // throughput sparkline
+  const cv = document.getElementById('spark'), ctx = cv.getContext('2d');
+  const pts = Array.from({ length: 120 }, () => 30 + Math.random() * 30);
+  const epsEl = document.getElementById('eps'), p95El = document.getElementById('p95');
+  function draw() {
+    pts.push(30 + Math.random() * 34); pts.shift();
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    const g = ctx.createLinearGradient(0, 0, 0, cv.height);
+    g.addColorStop(0, 'rgba(59,130,246,.35)'); g.addColorStop(1, 'rgba(59,130,246,0)');
+    ctx.beginPath();
+    pts.forEach((y, i) => { const x = i / (pts.length - 1) * cv.width; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+    ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.lineTo(cv.width, cv.height); ctx.lineTo(0, cv.height); ctx.closePath();
+    ctx.fillStyle = g; ctx.fill();
+    epsEl.textContent = fmt.format(1190000 + ((Math.random() * 40000) | 0));
+    p95El.textContent = (36 + (Math.random() * 5 | 0)) + 'ms';
+    requestAnimationFrame(() => setTimeout(draw, 900));
+  }
+  draw();
+</script>
+</body>
+</html>
