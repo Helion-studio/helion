@@ -427,7 +427,7 @@ function Panel({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-12% 0px" }}
         transition={rm ? { duration: 0 } : { duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="w-full max-w-md p-5 [background:linear-gradient(105deg,rgba(3,5,8,0.94)_0%,rgba(3,5,8,0.78)_58%,transparent_100%)] md:p-8 lg:max-w-lg"
+        className="w-full max-w-md rounded-2xl border border-white/10 bg-[#0a0e15] p-8 shadow-[0_24px_80px_rgba(0,0,0,0.45)] md:p-10 lg:max-w-lg"
       >
         <p className="flex items-center gap-2 font-display text-tag font-medium tracking-[0.08em] text-white/40 uppercase">
           <span aria-hidden className="size-[5px] rounded-full bg-energy" />

@@ -1,5 +1,5 @@
 import { getProjects } from "@/lib/projects";
-import { FlipDeck } from "@/components/sections/flip-deck";
+import { FlipDeck } from "@/components/shelved/flip-deck";
 
 /**
  * Landing showcase — four visual product shots as a locked flip deck.

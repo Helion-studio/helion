@@ -33,10 +33,22 @@ curl localhost:3000/api/ai   # → {"chat":true,"tts":true,"stt":true,"email":tr
    - manage inquiries / bookings / mark read
    - site stats (visitors, sessions, pageviews)
 
-## Landing page v3 — done 2026-09-10
+## Rollback — 2026-09-10 (later the same day)
 
-- Hero: same hierarchy, less code, custom cursor + magnetic removed (laggy)
-- Showcase: 4 screenshots as a stacked card deck — scroll flips the top card
-  to the back; deck right / text left on desktop, pinned deck on mobile
-- New: stats band, CTA band, ghost wordmark footer, ambient lighting
-- Old marquee showcase deleted
+The picture-era landing (deck showcase, stats/CTA bands, wordmark footer,
+/work thumbnails + detail pages, chat widget) tested badly on mobile.
+Everything from the screenshots round onward was rolled back to the
+approved pre-pictures site, keeping only invisible optimizations
+(fast cursor v2 + magnetic v2, lean CSS, Sora/Manrope, SQLite tracking).
+
+**Shelved, not deleted** — in `src/components/shelved/`:
+- flip-deck.tsx, showcase.tsx, stats-band.tsx, cta-band.tsx
+- project-page.tsx (the /work/[slug] detail page with iframe viewer)
+
+Kept in the repo (unmounted, invisible): Groq/Supabase/Resend libs + API
+routes (`/api/chat`, `/api/ai`, `/api/handoff`), chat-widget.tsx,
+public/work/* screenshots + ledgerline demo. When we rebuild the work
+showcase and live chat (roadmap items above), it all comes back online.
+
+Landing now: Hero → Story (dark cards) → footer. Matches the version the
+team approved on mobile.

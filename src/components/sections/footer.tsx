@@ -6,14 +6,6 @@ import { site } from "@/lib/site";
 export function Footer() {
   return (
     <footer className="border-t border-white/[0.06] bg-void">
-      <div className="mx-auto max-w-7xl px-5 pt-12 md:px-8">
-        <p
-          aria-hidden
-          className="font-display text-[clamp(2.4rem,9vw,6.5rem)] leading-none font-light tracking-tight text-white/[0.05] select-none"
-        >
-          TOP-NOTCH TEAM
-        </p>
-      </div>
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 md:grid-cols-[1.4fr_1fr_1fr] md:px-8">
         <div>
           <div className="flex items-center gap-2.5">
