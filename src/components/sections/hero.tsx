@@ -11,6 +11,8 @@ import {
 } from "motion/react";
 import { ArrowRight, ArrowUpRight, MessagesSquare } from "lucide-react";
 import { ParticleField } from "@/components/hero/particles";
+import { Cursor } from "@/components/hero/cursor";
+import { Magnetic } from "@/components/hero/magnetic";
 
 /**
  * HERO — the blue artwork with light, real depth on pointer devices:
@@ -113,38 +115,47 @@ export function Hero() {
             {...up(1.7)}
             className="mt-7 max-w-[52ch] text-lead leading-relaxed tracking-[-0.01em] text-white/65"
           >
-            Top-notch Team designs and ships production software — real-time platforms, developer
-            tooling and interfaces that feel instant on every device.
+            We're a small crew that builds software for a living — platforms that hold up
+            under real traffic, tools developers don't hate, pages that open before you blink.
           </motion.p>
 
           <motion.div {...up(1.9)} className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <a href="/contact" className="btn-primary">
-              Start your project
-              <ArrowRight className="size-4" />
-            </a>
-            <a href="/work" className="btn-ghost">
-              Visit our work
-              <ArrowUpRight className="size-4" />
-            </a>
+            <Magnetic>
+              <a href="/contact" className="btn-primary">
+                Start your project
+                <ArrowRight className="size-4" />
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <a href="/work" className="btn-ghost">
+                Visit our work
+                <ArrowUpRight className="size-4" />
+              </a>
+            </Magnetic>
           </motion.div>
         </motion.div>
       </motion.div>
 
       {/* chat pill */}
-      <motion.a
-        {...up(2.2)}
-        href="/contact"
-        aria-label="Chat with the team"
-        className="absolute right-5 bottom-24 z-50 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-[#070b12]/85 py-2 pr-4 pl-2.5 backdrop-blur-[8px] transition-colors duration-300 hover:border-white/25 md:right-12 md:bottom-16"
-      >
-        <span className="relative flex size-8 items-center justify-center rounded-full bg-arc/15 text-[#9ccbff]">
-          <MessagesSquare className="size-4" />
-          <span aria-hidden className="animate-pulse-dot absolute top-0 right-0 size-1.5 rounded-full bg-energy" />
-        </span>
-        <span className="font-display text-tag font-medium tracking-[0.06em] text-white/80 uppercase">
-          Chat with us
-        </span>
-      </motion.a>
+      <motion.div {...up(2.2)} className="absolute right-5 bottom-24 z-50 md:right-12 md:bottom-16">
+        <Magnetic pull={0.14}>
+          <a
+            href="/contact"
+            aria-label="Chat with the team"
+            className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-[#070b12]/85 py-2 pr-4 pl-2.5 backdrop-blur-[8px] transition-colors duration-300 hover:border-white/25"
+          >
+            <span className="relative flex size-8 items-center justify-center rounded-full bg-arc/15 text-[#9ccbff]">
+              <MessagesSquare className="size-4" />
+              <span aria-hidden className="animate-pulse-dot absolute top-0 right-0 size-1.5 rounded-full bg-energy" />
+            </span>
+            <span className="font-display text-tag font-medium tracking-[0.06em] text-white/80 uppercase">
+              Chat with us
+            </span>
+          </a>
+        </Magnetic>
+      </motion.div>
+
+      <Cursor />
     </section>
   );
 }

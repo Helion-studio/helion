@@ -369,3 +369,52 @@ html.custom-cursor, html.custom-cursor * { cursor: none !important; }
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
+
+/* ------------------------------------------------------------------
+   Custom cursor v2 — one dot, one lagging ring. No trail, no JS loop:
+   pointermove writes transforms, CSS transition does the chasing.
+------------------------------------------------------------------- */
+html.custom-cursor,
+html.custom-cursor * {
+  cursor: none !important;
+}
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 90;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 9999px;
+  background: #3b82f6;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  opacity: 0;
+}
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 90;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 9999px;
+  border: 1px solid rgba(59, 130, 246, 0.8);
+  mix-blend-mode: difference;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    transform 0.09s linear,
+    width 0.22s ease,
+    height 0.22s ease,
+    margin 0.22s ease,
+    opacity 0.2s ease;
+}
+.cursor-ring.is-hot {
+  width: 48px;
+  height: 48px;
+  margin: -24px 0 0 -24px;
+  border-color: #fff;
+}

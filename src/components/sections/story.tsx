@@ -400,15 +400,15 @@ const DISCIPLINES = [
 const HELP = [
   {
     k: "Build",
-    d: "Greenfield products and real-time platforms — from first commit to production traffic.",
+    d: "New products and platforms, from first commit to real traffic.",
   },
   {
     k: "Level up",
-    d: "Developer tooling and internal interfaces your team stops fighting and starts enjoying.",
+    d: "Tooling and internal interfaces your team stops fighting.",
   },
   {
     k: "Rescue",
-    d: "Latency, reliability and performance work on systems that cannot afford to fail.",
+    d: "Latency and reliability work on systems that really can't fail.",
   },
 ];
 
@@ -427,7 +427,7 @@ function Panel({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-12% 0px" }}
         transition={rm ? { duration: 0 } : { duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="w-full max-w-md rounded-2xl border border-white/10 bg-[#0a0e15] p-8 shadow-[0_24px_80px_rgba(0,0,0,0.45)] md:p-10 lg:max-w-lg"
+        className="w-full max-w-md p-5 [background:linear-gradient(105deg,rgba(3,5,8,0.94)_0%,rgba(3,5,8,0.78)_58%,transparent_100%)] md:p-8 lg:max-w-lg"
       >
         <p className="flex items-center gap-2 font-display text-tag font-medium tracking-[0.08em] text-white/40 uppercase">
           <span aria-hidden className="size-[5px] rounded-full bg-energy" />
@@ -482,9 +482,10 @@ export function Story() {
             <span className="font-medium">A deep bench.</span>
           </h2>
           <p className="mt-5 max-w-[46ch] text-body leading-relaxed tracking-[-0.01em] text-white/65">
-            Top-notch Team ships as one crew. No account layers, no telephone game — you talk
-            directly to the people writing the code. And when the work grows, the bench behind us
-            grows with it.
+            You'll work with the people actually writing your code, from the first call to
+            the last deploy. No account managers in between. When a project grows, we pull in
+            specialists we've shipped with for years — the team bends around the work, not the
+            other way round.
           </p>
           <ul className="mt-8 flex flex-wrap gap-2.5">
             {DISCIPLINES.map((d) => (
@@ -504,12 +505,12 @@ export function Story() {
             Make software feel <span className="font-medium">like thought.</span>
           </h2>
           <p className="mt-5 max-w-[46ch] text-body leading-relaxed tracking-[-0.01em] text-white/65">
-            Everything we ship is measured by one question: does it respond before doubt sets in?
-            Milliseconds compound into trust — and trust compounds into products people rely on
-            without thinking.
+            Fast software is respectful software. That's really the whole philosophy: a screen
+            should answer before you finish doubting it. We measure ourselves on that, then we
+            measure again.
           </p>
           <p className="mt-4 max-w-[46ch] text-body leading-relaxed tracking-[-0.01em] text-white/65">
-            Speed is the feature. Reliability is the craft. Everything else is detail.
+            Speed gets the attention. Reliability keeps it.
           </p>
         </Panel>
 

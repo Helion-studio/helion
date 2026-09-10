@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Reveal } from "@/components/reveal";
+import { Magnetic } from "@/components/hero/magnetic";
 
 /**
  * Closing statement — one big line, one glow, two ways forward.
@@ -21,18 +22,22 @@ export function CtaBand() {
             <span className="font-medium">Let&rsquo;s build it.</span>
           </h2>
           <p className="mx-auto mt-6 max-w-[52ch] text-lead leading-relaxed text-white/60">
-            Tell us what you&rsquo;re building — an engineer, not a funnel, replies within one
-            business day.
+            Tell us what you&rsquo;re building. An actual engineer gets back to you — usually
+            the same day.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <Link href="/contact" className="btn-primary">
-              Start your project
-              <ArrowRight className="size-4" />
-            </Link>
-            <Link href="/work" className="btn-ghost">
-              See our work
-              <ArrowUpRight className="size-4" />
-            </Link>
+            <Magnetic>
+              <Link href="/contact" className="btn-primary">
+                Start your project
+                <ArrowRight className="size-4" />
+              </Link>
+            </Magnetic>
+            <Magnetic>
+              <Link href="/work" className="btn-ghost">
+                See our work
+                <ArrowUpRight className="size-4" />
+              </Link>
+            </Magnetic>
           </div>
         </Reveal>
       </div>

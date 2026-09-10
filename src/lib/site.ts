@@ -3,9 +3,9 @@ export const site = {
   suffix: "team",
   fullName: "Top-notch Team",
   domain: "topnotch.team",
-  tagline: "Engineering studio for systems that hold.",
+  tagline: "We build software that holds.",
   description:
-    "We design and build production software — real-time platforms, developer tooling and interfaces that feel instant on every device.",
+    "A small engineering team that builds fast, reliable software — platforms, developer tools, and interfaces people don't have to think about.",
   email: "hello@topnotch.team",
   location: "Ondo · Lagos · Remote-first",
   nav: [
