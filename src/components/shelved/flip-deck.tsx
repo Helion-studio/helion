@@ -58,7 +58,7 @@ function Card({
           className="h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-void/85 via-transparent to-transparent" />
-        <p className="absolute bottom-4 left-5 font-display text-sm font-semibold text-white">
+        <p className="absolute bottom-4 left-5 font-display text-sm font-medium text-white">
           {p.name}
         </p>
       </div>

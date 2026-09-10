@@ -32,7 +32,7 @@ export function Navbar() {
         {/* logotype */}
         <Link href="/" className="flex items-center gap-2.5" aria-label="Top-notch Team — home">
           <Image src="/logo.png" alt="" width={28} height={28} className="h-7 w-7 object-contain" priority />
-          <span className="font-display text-[0.95rem] font-semibold tracking-tight text-white">
+          <span className="font-display text-[0.95rem] font-medium tracking-tight text-white">
             Top-notch <span className="text-white/50">Team</span>
           </span>
         </Link>

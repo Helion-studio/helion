@@ -10,7 +10,7 @@ export function Footer() {
         <div>
           <div className="flex items-center gap-2.5">
             <Image src="/logo.png" alt="" width={26} height={26} className="h-6.5 w-6.5 object-contain" />
-            <span className="font-display text-sm font-semibold tracking-tight text-white">
+            <span className="font-display text-sm font-medium tracking-tight text-white">
               Top-notch <span className="text-white/50">Team</span>
             </span>
           </div>
@@ -66,6 +66,17 @@ export function Footer() {
             Engineered in-house. No templates were harmed.
           </p>
         </div>
+      </div>
+
+      {/* the quiet ending — one mark, centered, after everything */}
+      <div className="flex justify-center px-5 pt-12 pb-14">
+        <Link
+          href="/"
+          aria-label="Top-notch Team — back to top"
+          className="opacity-80 transition-opacity duration-300 hover:opacity-100"
+        >
+          <Image src="/logo.png" alt="" width={32} height={32} className="h-8 w-8 object-contain" />
+        </Link>
       </div>
     </footer>
   );

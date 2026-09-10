@@ -11,7 +11,7 @@ import "./globals.css";
 const sora = Sora({
   subsets: ["latin"],
   display: "swap",
-  weight: ["300", "500", "600", "700"],
+  weight: ["300", "500"],
   variable: "--font-sora-src",
 });
 
@@ -19,7 +19,7 @@ const sora = Sora({
 const manrope = Manrope({
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500", "600"],
+  weight: ["400", "500"],
   variable: "--font-manrope-src",
 });
 

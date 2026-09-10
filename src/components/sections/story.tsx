@@ -449,6 +449,11 @@ export function Story() {
 
   return (
     <section ref={sectionRef} id="team" className="relative bg-void" aria-label="Our story">
+      {/* scene lighting — one cool, dim wash over the whole story */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 [background:radial-gradient(65%_55%_at_22%_28%,rgba(59,130,246,0.055),transparent_70%)]"
+      />
       {/* sticky 3D backdrop — right half on desktop, full-bleed on mobile */}
       <div className="sticky top-0 h-svh overflow-hidden">
         <div className="absolute inset-y-0 right-0 w-full md:w-1/2" ref={hostRef} aria-hidden />
@@ -481,7 +486,7 @@ export function Story() {
             <br />
             <span className="font-medium">A deep bench.</span>
           </h2>
-          <p className="mt-5 max-w-[46ch] text-body leading-relaxed tracking-[-0.01em] text-white/65">
+          <p className="mt-5 max-w-[46ch] text-pretty text-body leading-relaxed tracking-[-0.01em] text-white/65">
             You'll work with the people actually writing your code, from the first call to
             the last deploy. No account managers in between. When a project grows, we pull in
             specialists we've shipped with for years — the team bends around the work, not the
@@ -504,7 +509,7 @@ export function Story() {
           <h2 className="mt-5 font-display text-section leading-[1.05] font-light tracking-[-0.02em] text-white">
             Make software feel <span className="font-medium">like thought.</span>
           </h2>
-          <p className="mt-5 max-w-[46ch] text-body leading-relaxed tracking-[-0.01em] text-white/65">
+          <p className="mt-5 max-w-[46ch] text-pretty text-body leading-relaxed tracking-[-0.01em] text-white/65">
             Fast software is respectful software. That's really the whole philosophy: a screen
             should answer before you finish doubting it. We measure ourselves on that, then we
             measure again.

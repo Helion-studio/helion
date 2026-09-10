@@ -73,6 +73,8 @@ export function Hero() {
             srcSet="/hero/hero-bg-blue-1600.jpg 1600w, /hero/hero-bg-blue.jpg 3840w"
             sizes="100vw"
             alt=""
+            fetchPriority="high"
+            decoding="async"
             className="hero-bg-base h-full w-full object-cover"
           />
           <div
@@ -81,6 +83,12 @@ export function Hero() {
           />
         </motion.div>
       </div>
+
+      {/* scene lighting: fade the artwork into the page void */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-28 bg-gradient-to-b from-transparent to-void"
+      />
 
       {/* content */}
       <motion.div
@@ -113,7 +121,7 @@ export function Hero() {
 
           <motion.p
             {...up(1.7)}
-            className="mt-7 max-w-[52ch] text-lead leading-relaxed tracking-[-0.01em] text-white/65"
+            className="mt-7 max-w-[52ch] text-pretty text-lead leading-relaxed tracking-[-0.01em] text-white/65"
           >
             We're a small crew that builds software for a living — platforms that hold up
             under real traffic, tools developers don't hate, pages that open before you blink.

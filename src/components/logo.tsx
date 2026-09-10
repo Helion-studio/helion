@@ -53,7 +53,7 @@ export function Wordmark({
   return (
     <span className={cn("flex items-center gap-2.5", className)}>
       <Logo size={size} glow priority={priority} />
-      <span className="text-[0.95rem] font-semibold tracking-tight">
+      <span className="text-[0.95rem] font-medium tracking-tight">
         Helion
         <span className="font-normal text-muted-foreground"> Studio</span>
       </span>
