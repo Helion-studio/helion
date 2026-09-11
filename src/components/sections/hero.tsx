@@ -77,10 +77,7 @@ export function Hero() {
             decoding="async"
             className="hero-bg-base h-full w-full object-cover"
           />
-          <div
-            aria-hidden
-            className="hero-glow absolute top-[8%] -right-[10%] h-[85%] w-[70%] [background:radial-gradient(closest-side,rgba(47,163,255,0.28),transparent_72%)]"
-          />
+          <div aria-hidden className="hero-glow absolute" />
         </motion.div>
       </div>
 

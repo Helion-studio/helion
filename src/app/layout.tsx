@@ -5,6 +5,7 @@ import { site } from "@/lib/site";
 import { Navbar } from "@/components/sections/navbar";
 import { Footer } from "@/components/sections/footer";
 import { VisitTracker } from "@/components/visit-tracker";
+import { AmbientBackground } from "@/components/ambient-background";
 import "./globals.css";
 
 /** Display / headlines / tags — crisp premium-tech (free alt to the Nevera look). */
@@ -58,6 +59,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col bg-void text-white">
+        <AmbientBackground />
         <Navbar />
         {children}
         <Footer />

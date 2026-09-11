@@ -427,7 +427,7 @@ function Panel({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-12% 0px" }}
         transition={rm ? { duration: 0 } : { duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="w-full max-w-md rounded-2xl border border-white/10 bg-[#0a0e15] p-8 shadow-[0_24px_80px_rgba(0,0,0,0.45)] md:p-10 lg:max-w-lg"
+        className="panel-fade w-full max-w-md p-5 md:p-8 lg:max-w-lg"
       >
         <p className="flex items-center gap-2 font-display text-tag font-medium tracking-[0.08em] text-white/40 uppercase">
           <span aria-hidden className="size-[5px] rounded-full bg-energy" />
@@ -450,10 +450,7 @@ export function Story() {
   return (
     <section ref={sectionRef} id="team" className="relative bg-void" aria-label="Our story">
       {/* scene lighting — one cool, dim wash over the whole story */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 [background:radial-gradient(65%_55%_at_22%_28%,rgba(59,130,246,0.055),transparent_70%)]"
-      />
+      <div aria-hidden className="scene-wash pointer-events-none absolute inset-0" />
       {/* sticky 3D backdrop — right half on desktop, full-bleed on mobile */}
       <div className="sticky top-0 h-svh overflow-hidden">
         <div className="absolute inset-y-0 right-0 w-full md:w-1/2" ref={hostRef} aria-hidden />

@@ -6,9 +6,6 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  /* --- 21st.dev responsive-hero-banner --- */
-  --font-serif: var(--font-serif-src), "Instrument Serif", Georgia, serif;
-  --font-instrument-serif: var(--font-serif-src), "Instrument Serif", Georgia, serif;
   --font-display: var(--font-sora-src), "Sora", "Manrope", sans-serif;
 
   --color-background: var(--background);
@@ -52,9 +49,6 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
-  --color-brand-cyan: #5ce1e6;
-  --color-brand-violet: #7c5cff;
-  --color-brand-pink: #ff6ba9;
   /* ---- Helion brand (sampled from the logo) ---- */
   --color-helion-ice: #dce6ef;
   --color-helion-mist: #b4c8d8;
@@ -98,16 +92,6 @@
 }
 
 :root {
-  /* tokens from the component's integration guide */
-  --bg-0: #09090b;
-  --bg-100: #18181b;
-  --bg-200: #27272a;
-  --bg-300: #3f3f46;
-  --text-100: #fafafa;
-  --text-200: #e4e4e7;
-  --text-300: #a1a1aa;
-  --text-400: #71717a;
-
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -238,15 +222,6 @@
 
 
 
-/* --- 21st.dev responsive-hero-banner: entrance animation (from the author) --- */
-@keyframes fadeSlideIn {
-  0%  { opacity: 0; transform: translateY(20px); }
-  to  { opacity: 1; transform: translateY(0); }
-}
-.animate-fade-slide-in-1 { animation: 1s ease-out .1s both fadeSlideIn; }
-.animate-fade-slide-in-2 { animation: 1s ease-out .2s both fadeSlideIn; }
-.animate-fade-slide-in-3 { animation: 1s ease-out .3s both fadeSlideIn; }
-.animate-fade-slide-in-4 { animation: 1s ease-out .4s both fadeSlideIn; }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-slide-in-1,
@@ -279,6 +254,11 @@
 
 /* a slow pulse on the glow bloom sitting under the arc */
 .hero-glow {
+  top: 8%;
+  right: -10%;
+  height: 85%;
+  width: 70%;
+  background: radial-gradient(closest-side, rgba(47, 163, 255, 0.28), transparent 72%);
   animation: heroGlow 13s ease-in-out infinite;
 }
 
@@ -417,4 +397,74 @@ html.custom-cursor * {
   height: 48px;
   margin: -24px 0 0 -24px;
   border-color: #fff;
+}
+
+
+/* ------------------------------------------------------------------
+   Scene pieces — named classes, no inline CSS in the markup
+------------------------------------------------------------------- */
+
+/* story panels: no cards — text on a fade into the scene */
+.panel-fade {
+  background: linear-gradient(
+    100deg,
+    rgba(3, 5, 8, 0.94) 0%,
+    rgba(3, 5, 8, 0.72) 55%,
+    transparent 100%
+  );
+}
+
+/* the cool wash over the story scene */
+.scene-wash {
+  background: radial-gradient(65% 55% at 22% 28%, rgba(59, 130, 246, 0.055), transparent 70%);
+}
+
+/* footer ghost wordmark */
+.footer-wordmark {
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.05);
+  font-size: clamp(2.4rem, 9vw, 6.5rem);
+  user-select: none;
+}
+
+/* 3D image panes — rim-lit, floating */
+.pane-3d {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 0 0 1px rgba(59, 130, 246, 0.06),
+    0 30px 80px rgba(0, 0, 0, 0.55),
+    0 8px 40px rgba(59, 130, 246, 0.08);
+}
+.pane-3d::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(147, 197, 253, 0.14), transparent 18%),
+    linear-gradient(0deg, rgba(3, 5, 8, 0.55), transparent 30%);
+}
+
+/* ambient page light — blue/black, adjusts with scroll + cursor */
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      60% 50% at var(--amb-x, 50%) var(--amb-y, 30%),
+      rgba(37, 99, 235, calc(0.1 * var(--amb-i, 0.5))),
+      transparent 70%
+    ),
+    radial-gradient(
+      90% 70% at 50% 110%,
+      rgba(30, 58, 138, calc(0.12 * var(--amb-i, 0.5))),
+      transparent 75%
+    );
+  transition: background 0.6s ease;
 }
