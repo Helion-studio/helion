@@ -40,14 +40,20 @@ function ServiceRow({ s, i }: { s: Service; i: number }) {
     <Reveal>
       <div
         id={s.slug}
-        className={`grid items-center gap-8 py-14 md:gap-14 lg:grid-cols-2 lg:py-20 ${
-          isCustom ? "border-t border-white/[0.07] pt-16" : ""
-        }`}
+        className={`group/row relative grid items-center gap-8 py-14 md:gap-14 lg:grid-cols-2 lg:py-20`}
       >
+        {/* ghost numeral behind the text — editorial rhythm */}
+        <span
+          aria-hidden
+          className={`ghost-index font-display ${flip ? "lg:order-2" : "lg:order-1"}`}
+        >
+          {String(i + 1).padStart(2, "0")}
+        </span>
+
         {/* text — left or right, alternating */}
-        <div className={flip ? "lg:order-2" : "lg:order-1"}>
+        <div className={`relative ${flip ? "lg:order-2" : "lg:order-1"}`}>
           <div className="flex items-center gap-3">
-            <span className="flex size-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-[#9ccbff]">
+            <span className="flex size-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-[#9ccbff] transition-colors duration-300 group-hover/row:border-arc/40 group-hover/row:text-white">
               <Icon className="size-5" />
             </span>
             <span className="font-mono text-micro tracking-[0.14em] text-arc uppercase">
@@ -93,7 +99,7 @@ export function Services() {
   const custom = services.find((s) => s.icon === "custom")!;
 
   return (
-    <section id="services" aria-label="Our services" className="relative py-24 md:py-32">
+    <section id="services" aria-label="Our services" className="relative overflow-hidden py-24 md:py-32">
       <div
         aria-hidden
         className="pointer-events-none absolute top-0 left-1/2 h-[420px] w-[820px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-arc/[0.05] blur-3xl"
@@ -115,8 +121,12 @@ export function Services() {
 
         <div className="mt-8 md:mt-14">
           {main.map((s, i) => (
-            <ServiceRow key={s.slug} s={s} i={i} />
+            <div key={s.slug}>
+              <div aria-hidden className="row-rule" />
+              <ServiceRow s={s} i={i} />
+            </div>
           ))}
+          <div aria-hidden className="row-rule" />
           <ServiceRow s={custom} i={main.length} />
         </div>
       </div>
@@ -132,20 +142,23 @@ export function FinalCta() {
         aria-hidden
         className="pointer-events-none absolute top-1/2 left-1/2 h-[420px] w-[820px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-arc/[0.07] blur-3xl"
       />
-      <div className="relative mx-auto max-w-3xl px-5 text-center md:px-8">
+      <div className="relative mx-auto max-w-3xl px-5 md:px-8">
         <Reveal>
-          <p className="eyebrow justify-center">03 — Start</p>
-          <h2 className="mt-6 font-display text-hero font-light leading-[0.98] tracking-[-0.03em] text-balance">
-            Ready to engineer <span className="font-medium">your ambition?</span>
-          </h2>
-          <p className="mx-auto mt-6 max-w-[52ch] text-lead leading-relaxed text-white/60">
-            Let&rsquo;s discuss your project requirements and build something built to last.
-          </p>
-          <div className="mt-10 flex justify-center">
-            <Link href="/contact" className="btn-primary">
-              Schedule a Consultation
-              <ArrowRight className="size-4" />
-            </Link>
+          <div className="glass-panel mx-auto max-w-2xl p-10 text-center md:p-14">
+            <span aria-hidden className="orb mx-auto size-14" />
+            <p className="eyebrow mt-8 justify-center">03 — Start</p>
+            <h2 className="mt-5 font-display text-hero font-light leading-[0.98] tracking-[-0.03em] text-balance">
+              Ready to engineer <span className="font-medium">your ambition?</span>
+            </h2>
+            <p className="mx-auto mt-6 max-w-[52ch] text-lead leading-relaxed text-white/60">
+              Let&rsquo;s discuss your project requirements and build something built to last.
+            </p>
+            <div className="mt-10 flex justify-center">
+              <Link href="/contact" className="btn-primary">
+                Schedule a Consultation
+                <ArrowRight className="size-4" />
+              </Link>
+            </div>
           </div>
         </Reveal>
       </div>

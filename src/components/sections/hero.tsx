@@ -161,6 +161,15 @@ export function Hero() {
         </Magnetic>
       </motion.div>
 
+      {/* scroll cue */}
+      <motion.div
+        {...up(2.5)}
+        className="absolute bottom-7 left-1/2 z-40 flex -translate-x-1/2 flex-col items-center gap-2.5"
+      >
+        <span className="font-mono text-micro tracking-[0.32em] text-white/35 uppercase">Scroll</span>
+        <span aria-hidden className="scroll-cue" />
+      </motion.div>
+
       <Cursor />
     </section>
   );

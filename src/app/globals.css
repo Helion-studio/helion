@@ -491,3 +491,91 @@ html.custom-cursor * {
   padding: 0.3rem 0.75rem;
   white-space: nowrap;
 }
+
+/* ------------------------------------------------------------------
+   The polish pass — details that separate good from cooked
+------------------------------------------------------------------- */
+::selection {
+  background: rgba(59, 130, 246, 0.35);
+  color: #fff;
+}
+:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.7);
+  outline-offset: 2px;
+}
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.5);
+}
+
+/* hero scroll cue */
+.scroll-cue {
+  display: block;
+  width: 1px;
+  height: 2rem;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.45), transparent);
+  animation: cueDrop 1.8s ease-in-out infinite;
+}
+@keyframes cueDrop {
+  0%   { transform: scaleY(0); transform-origin: top; opacity: 0; }
+  35%  { opacity: 1; }
+  100% { transform: scaleY(1); transform-origin: top; opacity: 0; }
+}
+
+/* services — ghost editorial numerals + row hairlines */
+.ghost-index {
+  position: absolute;
+  top: -1.4rem;
+  left: -0.25rem;
+  font-size: clamp(4.5rem, 9vw, 7.5rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: rgba(255, 255, 255, 0.04);
+  user-select: none;
+  pointer-events: none;
+}
+.row-rule {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 72%);
+}
+
+/* final CTA — the ball arrives: pure-CSS chrome orb */
+.orb {
+  display: block;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle at 32% 28%,
+    #ffffff 0%,
+    #dce9ff 10%,
+    #6f9fe0 32%,
+    #1e3a8a 60%,
+    #0a1020 100%
+  );
+  box-shadow:
+    0 0 36px rgba(59, 130, 246, 0.4),
+    inset -6px -10px 20px rgba(0, 0, 0, 0.55);
+  animation: orbFloat 5.5s ease-in-out infinite;
+}
+@keyframes orbFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-9px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue { display: none; }
+  .orb { animation: none; }
+}
