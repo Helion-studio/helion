@@ -120,20 +120,21 @@ export function Hero() {
             {...up(1.7)}
             className="mt-7 max-w-[52ch] text-pretty text-lead leading-relaxed tracking-[-0.01em] text-white/65"
           >
-            We're a small crew that builds software for a living — platforms that hold up
-            under real traffic, tools developers don't hate, pages that open before you blink.
+            We build high-performance software engineered for your success. Meet Notch
+            Team — a dedicated engineering group ready to bring your biggest ideas to life,
+            from initial concept to deployment.
           </motion.p>
 
           <motion.div {...up(1.9)} className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <Magnetic>
               <a href="/contact" className="btn-primary">
-                Start your project
+                Let&rsquo;s Build
                 <ArrowRight className="size-4" />
               </a>
             </Magnetic>
             <Magnetic>
               <a href="/work" className="btn-ghost">
-                Visit our work
+                Explore Our Work
                 <ArrowUpRight className="size-4" />
               </a>
             </Magnetic>

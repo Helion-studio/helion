@@ -30,10 +30,10 @@ export function Navbar() {
     >
       <nav className="mx-auto flex h-full max-w-7xl items-center justify-between px-5 md:px-8">
         {/* logotype */}
-        <Link href="/" className="flex items-center gap-2.5" aria-label="Top-notch Team — home">
+        <Link href="/" className="flex items-center gap-2.5" aria-label="Notch Team — home">
           <Image src="/logo.png" alt="" width={28} height={28} className="h-7 w-7 object-contain" priority />
           <span className="font-display text-[0.95rem] font-medium tracking-tight text-white">
-            Top-notch <span className="text-white/50">Team</span>
+            Notch <span className="text-white/50">Team</span>
           </span>
         </Link>
 

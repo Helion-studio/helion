@@ -1,20 +1,19 @@
 export const site = {
-  name: "Top-notch",
+  name: "Notch",
   suffix: "team",
-  fullName: "Top-notch Team",
-  domain: "topnotch.team",
+  fullName: "Notch Team",
+  domain: "notch.team",
   tagline: "We build software that holds.",
   description:
     "A small engineering team that builds fast, reliable software — platforms, developer tools, and interfaces people don't have to think about.",
-  email: "hello@topnotch.team",
+  email: "hello@notch.team",
   location: "Ondo · Lagos · Remote-first",
   nav: [
-    { label: "Home", href: "/" },
-    { label: "Work", href: "/work" },
-    { label: "Process", href: "/process" },
-    { label: "More", href: "/more" },
+    { label: "Our Services", href: "/#services" },
+    { label: "Our Work", href: "/work" },
+    { label: "Contact Us", href: "/contact" },
   ],
-  cta: { label: "Start a project", href: "/contact" },
+  cta: { label: "Let\u2019s Build", href: "/contact" },
   social: {
     github: "https://github.com/topnotchteam",
     x: "https://x.com/topnotchteam",
