@@ -12,6 +12,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Reveal } from "@/components/reveal";
+import { ModelPane } from "@/components/3d/model-pane";
 import { services, type Service } from "@/lib/content";
 
 /**
@@ -76,18 +77,24 @@ function ServiceRow({ s, i }: { s: Service; i: number }) {
           </ul>
         </div>
 
-        {/* image — opposite the text */}
+        {/* visual — opposite the text (3D for car + server, image otherwise) */}
         <div className={flip ? "lg:order-1" : "lg:order-2"}>
-          <div className="group pane-3d aspect-[16/10]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={s.image}
-              alt={`${s.title} — ${s.tagline}`}
-              loading="lazy"
-              decoding="async"
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-            />
-          </div>
+          {s.slug === "game-development" ? (
+            <ModelPane kind="car" label={`${s.title} — live 3D`} />
+          ) : s.slug === "backend-baas" ? (
+            <ModelPane kind="server" label={`${s.title} — live 3D`} />
+          ) : (
+            <div className="group pane-3d aspect-[16/10]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={s.image}
+                alt={`${s.title} — ${s.tagline}`}
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+              />
+            </div>
+          )}
         </div>
       </div>
     </Reveal>
