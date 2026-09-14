@@ -80,9 +80,9 @@ function ServiceRow({ s, i }: { s: Service; i: number }) {
         {/* visual — opposite the text (3D for car + server, image otherwise) */}
         <div className={flip ? "lg:order-1" : "lg:order-2"}>
           {s.slug === "game-development" ? (
-            <ModelPane kind="car" label={`${s.title} — live 3D`} />
+            <ModelPane kind="car" label={`${s.title} — live 3D`} fallback={s.image} />
           ) : s.slug === "backend-baas" ? (
-            <ModelPane kind="server" label={`${s.title} — live 3D`} />
+            <ModelPane kind="server" label={`${s.title} — live 3D`} fallback={s.image} />
           ) : (
             <div className="group pane-3d aspect-[16/10]">
               {/* eslint-disable-next-line @next/next/no-img-element */}

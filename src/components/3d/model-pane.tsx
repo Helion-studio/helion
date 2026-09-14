@@ -1,12 +1,12 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
- * Model pane — mounts a 3D scene only when it approaches the viewport.
- * The GLB + three.js chunks load lazily, so the initial page never pays
- * for scenes the visitor hasn't scrolled to.
+ * Model pane — lazy-mounts a 3D scene when it approaches the viewport.
+ * If WebGL or the model fails, the generated key-art image takes over so
+ * the design never shows a dead pane.
  */
 const CarScene = dynamic(
   () => import("@/components/3d/car-scene").then((m) => m.CarScene),
@@ -17,9 +17,19 @@ const ServerScene = dynamic(
   { ssr: false },
 );
 
-export function ModelPane({ kind, label }: { kind: "car" | "server"; label: string }) {
+export function ModelPane({
+  kind,
+  label,
+  fallback,
+}: {
+  kind: "car" | "server";
+  label: string;
+  fallback: string;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const onFail = useCallback(() => setFailed(true), []);
 
   useEffect(() => {
     const el = ref.current;
@@ -39,12 +49,15 @@ export function ModelPane({ kind, label }: { kind: "car" | "server"; label: stri
 
   return (
     <div ref={ref} className="pane-3d aspect-[16/10] bg-[#05070c]">
-      {inView ? (
+      {inView && !failed ? (
         kind === "car" ? (
-          <CarScene />
+          <CarScene onFail={onFail} />
         ) : (
-          <ServerScene />
+          <ServerScene onFail={onFail} />
         )
+      ) : failed ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={fallback} alt={label} className="h-full w-full object-cover" />
       ) : (
         <div className="h-full w-full animate-pulse bg-white/[0.02]" aria-label={label} />
       )}
