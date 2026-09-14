@@ -103,21 +103,12 @@ export function CarScene({ onFail }: { onFail?: () => void }) {
     // a 0×0 canvas yields NaN projection matrices and renders nothing
     const sized = () => host.clientWidth > 4 && host.clientHeight > 4;
     let cleanup: (() => void) | undefined;
+    let started = false;
     const start = () => {
+      if (started) return;
+      started = true;
       cleanup = initScene();
     };
-
-    if (sized()) start();
-    else {
-      const ro = new ResizeObserver(() => {
-        if (sized()) {
-          ro.disconnect();
-          start();
-        }
-      });
-      ro.observe(host);
-      cleanup = () => ro.disconnect();
-    }
 
     const initScene = (): (() => void) | undefined => {
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -332,6 +323,18 @@ export function CarScene({ onFail }: { onFail?: () => void }) {
         renderer.dispose();
         if (renderer.domElement.parentNode === host) host.removeChild(renderer.domElement);
       };
+    }
+
+    if (sized()) start();
+    else {
+      const ro = new ResizeObserver(() => {
+        if (sized()) {
+          ro.disconnect();
+          start();
+        }
+      });
+      ro.observe(host);
+      cleanup = () => ro.disconnect();
     }
 
     return () => cleanup?.();

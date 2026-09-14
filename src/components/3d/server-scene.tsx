@@ -120,21 +120,12 @@ export function ServerScene({ onFail }: { onFail?: () => void }) {
     // never mount the canvas before the pane has real size (0×0 → NaN)
     const sized = () => host.clientWidth > 4 && host.clientHeight > 4;
     let cleanup: (() => void) | undefined;
+    let started = false;
     const start = () => {
+      if (started) return;
+      started = true;
       cleanup = initScene();
     };
-
-    if (sized()) start();
-    else {
-      const ro = new ResizeObserver(() => {
-        if (sized()) {
-          ro.disconnect();
-          start();
-        }
-      });
-      ro.observe(host);
-      cleanup = () => ro.disconnect();
-    }
 
     const initScene = (): (() => void) | undefined => {
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -343,6 +334,18 @@ export function ServerScene({ onFail }: { onFail?: () => void }) {
         renderer.dispose();
         if (renderer.domElement.parentNode === host) host.removeChild(renderer.domElement);
       };
+    }
+
+    if (sized()) start();
+    else {
+      const ro = new ResizeObserver(() => {
+        if (sized()) {
+          ro.disconnect();
+          start();
+        }
+      });
+      ro.observe(host);
+      cleanup = () => ro.disconnect();
     }
 
     return () => cleanup?.();
