@@ -33,9 +33,12 @@ export function Footer() {
               {l.label}
             </Link>
           ))}
-          <Link href="/contact" className="text-body text-white/60 transition-colors hover:text-white">
+          <a
+            href={`mailto:${site.email}`}
+            className="text-body text-white/60 transition-colors hover:text-white"
+          >
             Contact
-          </Link>
+          </a>
         </nav>
 
         <div className="flex flex-col gap-3">

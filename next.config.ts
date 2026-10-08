@@ -1,16 +1,7 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  images: {
-    // hosts used by most 21st.dev / Aceternity demo components
-    remotePatterns: [
-      { protocol: "https", hostname: "images.unsplash.com" },
-      { protocol: "https", hostname: "assets.aceternity.com" },
-      { protocol: "https", hostname: "avatars.githubusercontent.com" },
-      { protocol: "https", hostname: "pbs.twimg.com" },
-      { protocol: "https", hostname: "cdn.magicui.design" },
-    ],
-  },
-};
+// Telemetry is switched off with NEXT_TELEMETRY_DISABLED=1 (not a config key
+// in Next 16) — see the dev/build commands in package.json or your shell.
+const nextConfig: NextConfig = {};
 
 export default nextConfig;

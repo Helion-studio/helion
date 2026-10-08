@@ -1,244 +1,61 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "shadcn/tailwind.css";
-@config "../../tailwind.config.ts";
 
-@custom-variant dark (&:is(.dark *));
 
+/* ------------------------------------------------------------------
+   Landing-page design tokens — fluid type scale + mission-control palette
+   Display: Sora · Body: Manrope (wired up in app/layout.tsx)
+------------------------------------------------------------------- */
 @theme inline {
-  --font-display: var(--font-sora-src), "Sora", "Manrope", sans-serif;
-
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-manrope-src), "Manrope", ui-sans-serif, system-ui, sans-serif;
+  /* Display + body faces. Swap in next/font variables here to go back to
+     Sora / Manrope (see src/app/layout.tsx for the documented snippet). */
+  --font-display: "Sora", "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
-  --font-heading: var(--font-sans);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
-  /* ---- Helion brand (sampled from the logo) ---- */
-  --color-helion-ice: #dce6ef;
-  --color-helion-mist: #b4c8d8;
-  --color-helion-steel: #8ba2b8;
-  --color-helion-slate: #5b7085;
-  --color-helion-deep: #3c4854;
-  --color-helion-ink: #232c38;
-  --color-helion-void: #12161d;
-  --animate-shiny-text: shiny-text 8s infinite;
-  --animate-aurora: aurora 8s ease-in-out infinite alternate;
-  @keyframes shiny-text {
-  0%, 90%, 100% {
-    background-position: calc(-100% - var(--shiny-width)) 0;
-    }
-  30%, 60% {
-    background-position: calc(100% + var(--shiny-width)) 0;
-    }
-  }
-  @keyframes aurora {
-  0% {
-    background-position: 0% 50%;
-    transform: rotate(-5deg) scale(0.9);
-    }
-  25% {
-    background-position: 50% 100%;
-    transform: rotate(5deg) scale(1.1);
-    }
-  50% {
-    background-position: 100% 50%;
-    transform: rotate(-3deg) scale(0.95);
-    }
-  75% {
-    background-position: 50% 0%;
-    transform: rotate(3deg) scale(1.05);
-    }
-  100% {
-    background-position: 0% 50%;
-    transform: rotate(-5deg) scale(0.9);
-    }
-  }
-}
 
-:root {
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  --color-background: #030508;
+  --color-foreground: oklch(0.955 0.006 245);
+  --color-border: oklch(1 0 0 / 9%);
+  --color-ring: oklch(0.76 0.045 240);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-}
 
-.dark {
-  --background: oklch(0.163 0.011 250);
-  --foreground: oklch(0.955 0.006 245);
-  --card: oklch(0.203 0.013 250);
-  --card-foreground: oklch(0.955 0.006 245);
-  --popover: oklch(0.203 0.013 250);
-  --popover-foreground: oklch(0.955 0.006 245);
-  --primary: oklch(0.845 0.032 240);
-  --primary-foreground: oklch(0.19 0.014 250);
-  --secondary: oklch(0.262 0.016 250);
-  --secondary-foreground: oklch(0.955 0.006 245);
-  --muted: oklch(0.262 0.016 250);
-  --muted-foreground: oklch(0.703 0.021 246);
-  --accent: oklch(0.3 0.022 248);
-  --accent-foreground: oklch(0.965 0.006 245);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 9%);
-  --input: oklch(1 0 0 / 14%);
-  --ring: oklch(0.76 0.045 240);
-  --chart-1: oklch(0.87 0.03 240);
-  --chart-2: oklch(0.72 0.045 243);
-  --chart-3: oklch(0.58 0.045 248);
-  --chart-4: oklch(0.44 0.035 250);
-  --chart-5: oklch(0.31 0.025 250);
-  --sidebar: oklch(0.203 0.013 250);
-  --sidebar-foreground: oklch(0.955 0.006 245);
-  --sidebar-primary: oklch(0.76 0.045 240);
-  --sidebar-primary-foreground: oklch(0.19 0.014 250);
-  --sidebar-accent: oklch(0.3 0.022 248);
-  --sidebar-accent-foreground: oklch(0.965 0.006 245);
-  --sidebar-border: oklch(1 0 0 / 9%);
-  --sidebar-ring: oklch(0.76 0.045 240);
+  /* fluid type scale */
+  --text-micro: clamp(0.6rem, 0.7vw, 0.75rem);
+  --text-tag: clamp(0.65rem, 0.8vw, 0.8rem);
+  --text-nav: clamp(0.75rem, 0.9vw, 0.875rem);
+  --text-body: clamp(0.875rem, 1vw, 1rem);
+  --text-lead: clamp(1.125rem, 1.4vw, 1.25rem);
+  --text-section: clamp(1.75rem, 3vw, 2.5rem);
+  --text-hero: clamp(3rem, 7vw, 6rem);
+
+  /* palette — surfaces/text/borders use white opacity utilities */
+  --color-void: #030508;
+  --color-arc: #3b82f6;
+  --color-accent: #60a5fa;
+  --color-energy: #22d3ee;
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--color-border);
   }
-  body {
-    @apply bg-background text-foreground;
-  }
-  html {
-    @apply font-sans;
-  }
-}
-
-@layer base {
   html {
     -webkit-tap-highlight-color: transparent;
+    font-family: var(--font-sans);
   }
   body {
     text-rendering: optimizeLegibility;
+    background: var(--color-background);
+    color: var(--color-foreground);
   }
-  /* R3F canvas should never intercept scroll on touch devices */
+  /* WebGL canvas should never intercept scroll on touch devices */
   canvas {
     touch-action: pan-y;
   }
 }
 
-@layer base {
-  html { -webkit-tap-highlight-color: transparent; }
-  body { text-rendering: optimizeLegibility; }
-  canvas { touch-action: pan-y; }
-}
-
-/* Safety net: these 21st.dev blocks start at opacity-0 and rely on an
-   animation to appear. If a user disables motion, show them instantly
-   instead of leaving the hero blank. */
-@media (prefers-reduced-motion: reduce) {
-  .animate-fade-in,
-  .animate-fade-up {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-}
-
-
 /* ------------------------------------------------------------------
-   Spec §8 — Nevera / Varino. Commercial fonts, not bundled.
-   Drop the .woff2 into public/fonts/ and uncomment to activate.
-   Falls back to Geist (var(--font-sans)) until then.
-------------------------------------------------------------------- */
-/*
-@font-face {
-  font-family: "Nevera";
-  src: url("/fonts/Nevera.woff2") format("woff2");
-  font-weight: 500 700;
-  font-style: normal;
-  font-display: swap;
-}
-*/
-
-
-
-
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-fade-slide-in-1,
-  .animate-fade-slide-in-2,
-  .animate-fade-slide-in-3,
-  .animate-fade-slide-in-4 { animation: none; opacity: 1; transform: none; }
-}
-
-
-/* ------------------------------------------------------------------
-   Hero artwork — subtle life.
-   Two cheap, GPU-composited layers over the same image:
-     .hero-bg-base   very slow breathe (scale + brightness)
-     .hero-bg-sweep  a copy in `screen` blend, masked to a narrow band
-                     that travels along the arc, so light appears to
-                     run down the curve. Colour is never changed —
-                     only existing luminance is amplified.
+   HERO — artwork breathing + glow bloom
 ------------------------------------------------------------------- */
 .hero-bg-base {
   transform: scale(1.03);
@@ -247,12 +64,17 @@
 }
 
 @keyframes heroBreathe {
-  0%, 100% { transform: scale(1.03); filter: brightness(1) saturate(1); }
-  50%      { transform: scale(1.055); filter: brightness(1.1) saturate(1.06); }
+  0%,
+  100% {
+    transform: scale(1.03);
+    filter: brightness(1) saturate(1);
+  }
+  50% {
+    transform: scale(1.055);
+    filter: brightness(1.1) saturate(1.06);
+  }
 }
 
-
-/* a slow pulse on the glow bloom sitting under the arc */
 .hero-glow {
   top: 8%;
   right: -10%;
@@ -263,97 +85,65 @@
 }
 
 @keyframes heroGlow {
-  0%, 100% { opacity: 0.35; }
-  50%      { opacity: 0.7; }
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .hero-bg-base,
-  .hero-glow { animation: none; }
-}
-
-
-/* ==================================================================
-   HERO v2 — "mission control" design system (2026-09 brief)
-   Space Grotesk (display) · Inter (body) · #030508 void · arc blue
-================================================================== */
-@theme {
-  /* fluid type scale — exact clamp values from the brief */
-  --text-micro:   clamp(0.6rem, 0.7vw, 0.75rem);
-  --text-tag:     clamp(0.65rem, 0.8vw, 0.8rem);
-  --text-nav:     clamp(0.75rem, 0.9vw, 0.875rem);
-  --text-body:    clamp(0.875rem, 1vw, 1rem);
-  --text-lead:    clamp(1.125rem, 1.4vw, 1.25rem);
-  --text-section: clamp(1.75rem, 3vw, 2.5rem);
-  --text-hero:    clamp(3rem, 7vw, 6rem);
-
-  /* palette — surfaces/text/borders use white opacity utilities */
-  --color-void:   #030508;
-  --color-arc:    #3b82f6;
-  --color-accent: #60a5fa;
-  --color-energy: #22d3ee;
-}
-
-/* pulsing "live" dot — scale 1→1.2→1, opacity 1→0.6→1, 2s */
+/* pulsing "live" dot */
 @keyframes pulseDot {
-  0%, 100% { transform: scale(1);   opacity: 1; }
-  50%      { transform: scale(1.2); opacity: 0.6; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.6;
+  }
 }
-.animate-pulse-dot { animation: pulseDot 2s ease-in-out infinite; }
+.animate-pulse-dot {
+  animation: pulseDot 2s ease-in-out infinite;
+}
 
 /* particles canvas fades in at the 3s mark of the load sequence */
 .particle-layer {
   opacity: 0;
   transition: opacity 1.4s ease 3s;
 }
-.particle-layer.is-live { opacity: 1; }
-
-/* custom cursor active → hide the native one (fine pointers only) */
-html.custom-cursor, html.custom-cursor * { cursor: none !important; }
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-pulse-dot { animation: none; }
-  .particle-layer { transition: none; opacity: 1; }
+.particle-layer.is-live {
+  opacity: 1;
 }
 
-
-
-
-/* chat widget scrollbar */
-.chat-scroll::-webkit-scrollbar {
-  width: 5px;
+/* hero scroll cue */
+.scroll-cue {
+  display: block;
+  width: 1px;
+  height: 2rem;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.45), transparent);
+  animation: cueDrop 1.8s ease-in-out infinite;
 }
-.chat-scroll::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 9999px;
-}
-
-
-/* ------------------------------------------------------------------
-   Shared component classes — less utility soup, more human markup
-------------------------------------------------------------------- */
-@layer components {
-  .eyebrow {
-    @apply font-display text-tag font-medium tracking-[0.14em] text-white/40 uppercase;
+@keyframes cueDrop {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+    opacity: 0;
   }
-  .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 font-display text-nav font-medium text-void transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(59,130,246,0.25)];
+  35% {
+    opacity: 1;
   }
-  .btn-ghost {
-    @apply inline-flex items-center gap-2 rounded-full border border-white/10 px-7 py-3.5 font-display text-nav font-medium text-white transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.04];
+  100% {
+    transform: scaleY(1);
+    transform-origin: top;
+    opacity: 0;
   }
 }
 
-/* card deck (showcase) — 3D flip faces */
-.backface-hidden {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-/* ------------------------------------------------------------------
-   Custom cursor v2 — one dot, one lagging ring. No trail, no JS loop:
-   pointermove writes transforms, CSS transition does the chasing.
-------------------------------------------------------------------- */
+/* custom cursor v2 — one dot, one lagging ring, no JS loop */
 html.custom-cursor,
 html.custom-cursor * {
   cursor: none !important;
@@ -399,54 +189,19 @@ html.custom-cursor * {
   border-color: #fff;
 }
 
-
 /* ------------------------------------------------------------------
-   Scene pieces — named classes, no inline CSS in the markup
+   Shared component classes
 ------------------------------------------------------------------- */
-
-/* story panels: no cards — text on a fade into the scene */
-.panel-fade {
-  background: linear-gradient(
-    100deg,
-    rgba(3, 5, 8, 0.94) 0%,
-    rgba(3, 5, 8, 0.72) 55%,
-    transparent 100%
-  );
-}
-
-/* the cool wash over the story scene */
-.scene-wash {
-  background: radial-gradient(65% 55% at 22% 28%, rgba(59, 130, 246, 0.055), transparent 70%);
-}
-
-/* footer ghost wordmark */
-.footer-wordmark {
-  font-weight: 300;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  color: rgba(255, 255, 255, 0.05);
-  font-size: clamp(2.4rem, 9vw, 6.5rem);
-  user-select: none;
-}
-
-/* 3D image panes — rim-lit, floating */
-.pane-3d {
-  position: relative;
-  border-radius: 1rem;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow:
-    0 0 0 1px rgba(59, 130, 246, 0.06),
-    0 30px 80px rgba(0, 0, 0, 0.55),
-    0 8px 40px rgba(59, 130, 246, 0.08);
-}
-.pane-3d::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(147, 197, 253, 0.14), transparent 18%),
-    linear-gradient(0deg, rgba(3, 5, 8, 0.55), transparent 30%);
+@layer components {
+  .eyebrow {
+    @apply font-display text-tag font-medium tracking-[0.14em] text-white/40 uppercase;
+  }
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 font-display text-nav font-medium text-void transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(59,130,246,0.25)];
+  }
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-full border border-white/10 px-7 py-3.5 font-display text-nav font-medium text-white transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.04];
+  }
 }
 
 /* ambient page light — blue/black, adjusts with scroll + cursor */
@@ -469,9 +224,7 @@ html.custom-cursor * {
   transition: background 0.6s ease;
 }
 
-/* ------------------------------------------------------------------
-   Glass panel (over the chrome spiral) + service chips
-------------------------------------------------------------------- */
+/* glass panel (over the chrome spiral) + service chips */
 .glass-panel {
   background: rgba(255, 255, 255, 0.045);
   backdrop-filter: blur(16px);
@@ -492,8 +245,82 @@ html.custom-cursor * {
   white-space: nowrap;
 }
 
+/* services — 3D-style image panes (rim-lit, floating) */
+.pane-3d {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 0 0 1px rgba(59, 130, 246, 0.06),
+    0 30px 80px rgba(0, 0, 0, 0.55),
+    0 8px 40px rgba(59, 130, 246, 0.08);
+}
+.pane-3d::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(147, 197, 253, 0.14), transparent 18%),
+    linear-gradient(0deg, rgba(3, 5, 8, 0.55), transparent 30%);
+}
+.ghost-index {
+  position: absolute;
+  top: -1.4rem;
+  left: -0.25rem;
+  font-size: clamp(4.5rem, 9vw, 7.5rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: rgba(255, 255, 255, 0.04);
+  user-select: none;
+  pointer-events: none;
+}
+.row-rule {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 72%);
+}
+
+/* footer ghost wordmark */
+.footer-wordmark {
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.05);
+  font-size: clamp(2.4rem, 9vw, 6.5rem);
+  user-select: none;
+}
+
+/* final CTA — pure-CSS chrome orb */
+.orb {
+  display: block;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle at 32% 28%,
+    #ffffff 0%,
+    #dce9ff 10%,
+    #6f9fe0 32%,
+    #1e3a8a 60%,
+    #0a1020 100%
+  );
+  box-shadow:
+    0 0 36px rgba(59, 130, 246, 0.4),
+    inset -6px -10px 20px rgba(0, 0, 0, 0.55);
+  animation: orbFloat 5.5s ease-in-out infinite;
+}
+@keyframes orbFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+
 /* ------------------------------------------------------------------
-   The polish pass — details that separate good from cooked
+   The polish pass
 ------------------------------------------------------------------- */
 ::selection {
   background: rgba(59, 130, 246, 0.35);
@@ -521,61 +348,22 @@ html {
   background: rgba(59, 130, 246, 0.5);
 }
 
-/* hero scroll cue */
-.scroll-cue {
-  display: block;
-  width: 1px;
-  height: 2rem;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.45), transparent);
-  animation: cueDrop 1.8s ease-in-out infinite;
-}
-@keyframes cueDrop {
-  0%   { transform: scaleY(0); transform-origin: top; opacity: 0; }
-  35%  { opacity: 1; }
-  100% { transform: scaleY(1); transform-origin: top; opacity: 0; }
-}
-
-/* services — ghost editorial numerals + row hairlines */
-.ghost-index {
-  position: absolute;
-  top: -1.4rem;
-  left: -0.25rem;
-  font-size: clamp(4.5rem, 9vw, 7.5rem);
-  font-weight: 300;
-  line-height: 1;
-  letter-spacing: -0.04em;
-  color: rgba(255, 255, 255, 0.04);
-  user-select: none;
-  pointer-events: none;
-}
-.row-rule {
-  height: 1px;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 72%);
-}
-
-/* final CTA — the ball arrives: pure-CSS chrome orb */
-.orb {
-  display: block;
-  border-radius: 9999px;
-  background: radial-gradient(
-    circle at 32% 28%,
-    #ffffff 0%,
-    #dce9ff 10%,
-    #6f9fe0 32%,
-    #1e3a8a 60%,
-    #0a1020 100%
-  );
-  box-shadow:
-    0 0 36px rgba(59, 130, 246, 0.4),
-    inset -6px -10px 20px rgba(0, 0, 0, 0.55);
-  animation: orbFloat 5.5s ease-in-out infinite;
-}
-@keyframes orbFloat {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-9px); }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .scroll-cue { display: none; }
-  .orb { animation: none; }
+  .animate-pulse-dot {
+    animation: none;
+  }
+  .particle-layer {
+    transition: none;
+    opacity: 1;
+  }
+  .hero-bg-base,
+  .hero-glow {
+    animation: none;
+  }
+  .scroll-cue {
+    display: none;
+  }
+  .orb {
+    animation: none;
+  }
 }
