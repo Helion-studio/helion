@@ -17,8 +17,8 @@ export function AmbientBackground() {
     if (!el) return;
 
     let raf = 0;
-    let target = { x: 50, y: 30, i: 0.4 };
-    let current = { x: 50, y: 30, i: 0.4 };
+    const target = { x: 50, y: 30, i: 0.4 };
+    const current = { x: 50, y: 30, i: 0.4 };
 
     const apply = () => {
       raf = 0;

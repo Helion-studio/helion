@@ -13,6 +13,7 @@ import { ArrowRight, ArrowUpRight, MessagesSquare } from "lucide-react";
 import { ParticleField } from "@/components/hero/particles";
 import { Cursor } from "@/components/hero/cursor";
 import { Magnetic } from "@/components/hero/magnetic";
+import { site } from "@/lib/site";
 
 /**
  * HERO — the blue artwork with light, real depth on pointer devices:
@@ -127,14 +128,14 @@ export function Hero() {
 
           <motion.div {...up(1.9)} className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <Magnetic>
-              <a href="/contact" className="btn-primary">
-                Let&rsquo;s Build
+              <a href="#services" className="btn-primary">
+                What We Build
                 <ArrowRight className="size-4" />
               </a>
             </Magnetic>
             <Magnetic>
-              <a href="/work" className="btn-ghost">
-                Explore Our Work
+              <a href="#start" className="btn-ghost">
+                Start a Project
                 <ArrowUpRight className="size-4" />
               </a>
             </Magnetic>
@@ -146,7 +147,7 @@ export function Hero() {
       <motion.div {...up(2.2)} className="absolute right-5 bottom-24 z-50 md:right-12 md:bottom-16">
         <Magnetic pull={0.14}>
           <a
-            href="/contact"
+            href={`mailto:${site.email}`}
             aria-label="Chat with the team"
             className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-[#070b12]/85 py-2 pr-4 pl-2.5 backdrop-blur-[8px] transition-colors duration-300 hover:border-white/25"
           >

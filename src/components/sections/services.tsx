@@ -11,8 +11,7 @@ import {
   Wrench,
   type LucideIcon,
 } from "lucide-react";
-import { Reveal } from "@/components/reveal";
-import { ModelPane } from "@/components/3d/model-pane";
+import { site } from "@/lib/site";
 import { services, type Service } from "@/lib/content";
 
 /**
@@ -35,12 +34,10 @@ const ICONS: Record<Service["icon"], LucideIcon> = {
 function ServiceRow({ s, i }: { s: Service; i: number }) {
   const Icon = ICONS[s.icon];
   const flip = i % 2 === 1; // alternate sides — no row repeats a layout
-  const isCustom = s.icon === "custom";
 
   return (
-    <Reveal>
-      <div
-        id={s.slug}
+    <div
+      id={s.slug}
         className={`group/row relative grid items-center gap-8 py-14 md:gap-14 lg:grid-cols-2 lg:py-20`}
       >
         {/* ghost numeral behind the text — editorial rhythm */}
@@ -79,25 +76,18 @@ function ServiceRow({ s, i }: { s: Service; i: number }) {
 
         {/* visual — opposite the text (3D for car + server, image otherwise) */}
         <div className={flip ? "lg:order-1" : "lg:order-2"}>
-          {s.slug === "game-development" ? (
-            <ModelPane kind="car" label={`${s.title} — live 3D`} fallback={s.image} />
-          ) : s.slug === "backend-baas" ? (
-            <ModelPane kind="server" label={`${s.title} — live 3D`} fallback={s.image} />
-          ) : (
-            <div className="group pane-3d aspect-[16/10]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={s.image}
-                alt={`${s.title} — ${s.tagline}`}
-                loading="lazy"
-                decoding="async"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-              />
-            </div>
-          )}
-        </div>
+          <div className="group pane-3d aspect-[16/10]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={s.image}
+              alt={`${s.title} — ${s.tagline}`}
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+            />
+          </div>
       </div>
-    </Reveal>
+    </div>
   );
 }
 
@@ -113,7 +103,7 @@ export function Services() {
       />
 
       <div className="relative mx-auto max-w-7xl px-5 md:px-8">
-        <Reveal>
+        <div>
           <p className="eyebrow">
             <span className="font-mono text-arc">02</span> Services
           </p>
@@ -124,7 +114,7 @@ export function Services() {
             We deliver robust development, infrastructure, and security solutions across the
             entire tech ecosystem.
           </p>
-        </Reveal>
+        </div>
 
         <div className="mt-8 md:mt-14">
           {main.map((s, i) => (
@@ -144,13 +134,13 @@ export function Services() {
 /** Final call to action — the last word before the footer. */
 export function FinalCta() {
   return (
-    <section className="relative overflow-hidden py-28 md:py-36">
+    <section id="start" className="relative overflow-hidden py-28 md:py-36">
       <div
         aria-hidden
         className="pointer-events-none absolute top-1/2 left-1/2 h-[420px] w-[820px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-arc/[0.07] blur-3xl"
       />
       <div className="relative mx-auto max-w-3xl px-5 md:px-8">
-        <Reveal>
+        <div>
           <div className="glass-panel mx-auto max-w-2xl p-10 text-center md:p-14">
             <span aria-hidden className="orb mx-auto size-14" />
             <p className="eyebrow mt-8 justify-center">03 — Start</p>
@@ -161,13 +151,13 @@ export function FinalCta() {
               Let&rsquo;s discuss your project requirements and build something built to last.
             </p>
             <div className="mt-10 flex justify-center">
-              <Link href="/contact" className="btn-primary">
+              <Link href={`mailto:${site.email}`} className="btn-primary">
                 Schedule a Consultation
                 <ArrowRight className="size-4" />
               </Link>
             </div>
           </div>
-        </Reveal>
+        </div>
       </div>
     </section>
   );
