@@ -1,96 +1,103 @@
 /**
- * Site content — the landing page's services list. Single source of truth.
+ * Store content — the plan matrix and the deploy flow. Spec-only by design:
+ * no prices live here, so nothing drifts out of date with billing.
  */
 
-export type Service = {
+export type Plan = {
   slug: string;
-  icon:
-    | "game"
-    | "cloud"
-    | "server"
-    | "frontend"
-    | "ai"
-    | "data"
-    | "security"
-    | "custom";
-  title: string;
-  tagline: string;
-  body: string;
-  ecosystem: string[];
+  tier: "nano" | "micro" | "core" | "titan";
+  name: string;
+  blurb: string;
+  vcpu: string;
+  ram: string;
+  disk: string;
+  transfer: string;
   image: string;
+  popular?: boolean;
 };
 
-export const services: Service[] = [
+export const plans: Plan[] = [
   {
-    slug: "game-development",
-    icon: "game",
-    title: "Game Development",
-    tagline: "Turn concepts into immersive realities",
-    body: "Bring your game ideas to us. We specialize in everything from lightweight native platform games to high-end, cross-platform experiences.",
-    ecosystem: ["Unity", "Godot", "Roblox", "Unreal Engine", "Android & iOS"],
-    image: "/services/game-development.jpg",
+    slug: "nano",
+    tier: "nano",
+    name: "Nano",
+    blurb: "Side projects, bots, that one cron job you keep promising to fix.",
+    vcpu: "1 vCPU",
+    ram: "1 GB RAM",
+    disk: "20 GB NVMe",
+    transfer: "1 Gbps port",
+    image: "/vps/core.jpg",
   },
   {
-    slug: "devops-cloud",
-    icon: "cloud",
-    title: "DevOps & Cloud Infrastructure",
-    tagline: "Automated pipelines, zero management overhead",
-    body: "Stop worrying about server stability and deployments. We handle your entire pipeline from local development to cloud production, so you never have to manually merge configurations again.",
-    ecosystem: ["AWS", "Cloudflare", "CI/CD Pipelines", "Infrastructure as Code"],
-    image: "/services/devops-cloud.jpg",
+    slug: "micro",
+    tier: "micro",
+    name: "Micro",
+    blurb: "Staging, APIs, small sites that behave themselves under load.",
+    vcpu: "2 vCPU",
+    ram: "4 GB RAM",
+    disk: "80 GB NVMe",
+    transfer: "2 Gbps port",
+    image: "/vps/rack.jpg",
   },
   {
-    slug: "backend-baas",
-    icon: "server",
-    title: "Backend Architecture & BaaS",
-    tagline: "Scalable foundations for modern apps",
-    body: "A great product is only as strong as its core. We build rock-solid architectures utilizing both managed Backend-as-a-Service solutions and custom server-side systems.",
-    ecosystem: ["Supabase", "Appwrite", "PostgreSQL", "Go", "Python"],
-    image: "/services/backend-baas.jpg",
+    slug: "core",
+    tier: "core",
+    name: "Core",
+    blurb: "Production apps, game servers, CI runners that never sit idle.",
+    vcpu: "4 vCPU",
+    ram: "8 GB RAM",
+    disk: "160 GB NVMe",
+    transfer: "4 Gbps port",
+    image: "/vps/latency.jpg",
+    popular: true,
   },
   {
-    slug: "frontend-engineering",
-    icon: "frontend",
-    title: "Frontend Engineering",
-    tagline: "Interactive, fluid, and high-converting interfaces",
-    body: "Don't let an outdated, sluggish interface turn users away. We engineer premium web and mobile frontends that feel alive, modern, and professional.",
-    ecosystem: ["React", "Next.js", "React Native", "TypeScript"],
-    image: "/services/frontend-engineering.jpg",
+    slug: "titan",
+    tier: "titan",
+    name: "Titan",
+    blurb: "Traffic spikes, data-heavy backends, clusters you run yourself.",
+    vcpu: "8 vCPU",
+    ram: "32 GB RAM",
+    disk: "640 GB NVMe",
+    transfer: "10 Gbps port",
+    image: "/vps/core.jpg",
+  },
+];
+
+/** Specs shown as a compact grid on every card — order matters. */
+export const specKeys = [
+  { label: "vCPU", key: "vcpu" },
+  { label: "Memory", key: "ram" },
+  { label: "NVMe", key: "disk" },
+  { label: "Network", key: "transfer" },
+] as const;
+
+export type FlowIcon = "cursor" | "bolt" | "globe";
+
+export const flow: { title: string; body: string; icon: FlowIcon }[] = [
+  {
+    title: "Pick a size",
+    body: "Four tiers, no sales call. Resize up whenever the traffic graph gets interesting.",
+    icon: "cursor",
   },
   {
-    slug: "ai-automation",
-    icon: "ai",
-    title: "AI, ML & Intelligent Automation",
-    tagline: "Eliminate manual bottlenecks",
-    body: "It is 2026 — your business shouldn't be held back by manual tasks. We integrate advanced AI models and Large Language Models to transform everyday business processes into fully automated, intelligent workflows.",
-    ecosystem: ["LLM Integration", "RAG Pipelines", "Process Automation", "Groq"],
-    image: "/services/ai-automation.jpg",
+    title: "Deploy in ~40s",
+    body: "Ubuntu, Debian, Alpine or your own image. Root keys land before the progress bar ends.",
+    icon: "bolt",
   },
   {
-    slug: "data-pipelines",
-    icon: "data",
-    title: "Data Engineering & Pipelines",
-    tagline: "Streamlined infrastructure for complex data",
-    body: "Managing data ingestion and processing can be incredibly frustrating. We build clean, resilient data pipelines that connect your business to the highest-quality data sources with zero friction.",
-    ecosystem: ["Ingestion", "ETL", "Streaming", "Warehousing"],
-    image: "/services/data-pipelines.jpg",
+    title: "Snapshots + private net",
+    body: "Roll back in one click, and let your nodes talk to each other for free on the LAN.",
+    icon: "globe",
   },
-  {
-    slug: "cyber-security",
-    icon: "security",
-    title: "Cyber Security",
-    tagline: "Proactive defense for peace of mind",
-    body: "Digital assets face constant threats. Whether you are building from scratch or recovering from a previous security breach, we implement rigorous defensive protocols to ensure your data stays locked down.",
-    ecosystem: ["Audits", "Hardening", "Monitoring", "Incident Response"],
-    image: "/services/cyber-security.jpg",
-  },
-  {
-    slug: "custom-ecosystems",
-    icon: "custom",
-    title: "Custom Ecosystems",
-    tagline: "Have a unique challenge?",
-    body: "If your exact project requirements aren't listed above, bring them to us anyway. We specialize in tackling highly custom, complex technical problems from the ground up.",
-    ecosystem: ["Open Layer", "Built From Scratch"],
-    image: "/services/custom-ecosystems.jpg",
-  },
+];
+
+/** Included-with-every-plan strip under the cards. */
+export const included = [
+  "Full root access",
+  "Hourly snapshots",
+  "Free private LAN",
+  "DDoS filtering",
+  "NVMe on every tier",
+  "No egress surprises",
 ];

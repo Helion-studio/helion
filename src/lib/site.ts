@@ -1,19 +1,28 @@
+/**
+ * Dannystore — the single switch for the brand. Rename here and the whole
+ * site follows (nav, footer, metadata, mailto).
+ */
 export const site = {
-  name: "Notch",
-  suffix: "team",
-  fullName: "Notch Team",
-  domain: "notch.team",
-  tagline: "We build software that holds.",
+  name: "Danny",
+  suffix: "store",
+  fullName: "Dannystore",
+  domain: "dannystore.dev",
+  tagline: "Instant VPS, no ceremony.",
   description:
-    "A small engineering team that builds fast, reliable software — platforms, developer tools, and interfaces people don't have to think about.",
-  email: "hello@notch.team",
-  location: "Ondo · Lagos · Remote-first",
-  /** Single-page site: the nav links are anchors into the landing page. */
-  nav: [{ label: "Our Services", href: "/#services" }],
-  cta: { label: "Let’s Build", href: "/#start" },
+    "SSD-backed virtual servers deployed in under a minute. Full root, hourly snapshots, a private network that does not charge you for talking to itself.",
+  email: "hello@dannystore.dev",
+  location: "Lagos · Frankfurt · Ashburn · Singapore",
+  /** Single-page store: every link is an anchor into the landing page. */
+  nav: [
+    { label: "Plans", href: "/#plans" },
+    { label: "Network", href: "/#network" },
+  ],
+  cta: { label: "Deploy a node", href: "/#plans" },
   social: {
-    github: "https://github.com/topnotchteam",
-    x: "https://x.com/topnotchteam",
-    linkedin: "https://linkedin.com/company/topnotchteam",
+    github: "https://github.com/dannystore",
+    x: "https://x.com/dannystore",
+    status: "https://status.dannystore.dev",
   },
 } as const;
+
+export type SiteConfig = typeof site;

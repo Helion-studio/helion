@@ -1,13 +1,14 @@
 import { Hero } from "@/components/sections/hero";
 import { ChromeSpiral } from "@/components/sections/chrome-spiral";
-import { Services, FinalCta } from "@/components/sections/services";
+import { Plans, Flow, FinalCta } from "@/components/sections/plans";
 
 export default function Home() {
   return (
     <main className="flex-1">
       <Hero />
       <ChromeSpiral />
-      <Services />
+      <Plans />
+      <Flow />
       <FinalCta />
     </main>
   );

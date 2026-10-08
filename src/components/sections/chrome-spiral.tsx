@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
 /**
- * THE CHROME SPIRAL — Notch Team's centerpiece.
+ * THE CHROME SPIRAL — the drop from a cold start to a shell prompt.
  *
  * A faceted chrome rod twisted into a descending helix with an additive
  * energy sheath hugging it, a glossy ball that rides the path carrying its
@@ -266,7 +266,12 @@ export function ChromeSpiral() {
   useChromeSpiral(hostRef, sectionRef, hudRef, barRef, hintRef);
 
   return (
-    <section ref={sectionRef} aria-label="How we work" className="relative h-[260svh] bg-void">
+    <section
+      ref={sectionRef}
+      id="network"
+      aria-label="Provisioning"
+      className="relative h-[260svh] bg-void"
+    >
       <div className="sticky top-0 flex h-svh items-center overflow-hidden">
         <div ref={hostRef} className="absolute inset-0" aria-hidden />
 
@@ -280,22 +285,22 @@ export function ChromeSpiral() {
             className="glass-panel max-w-lg p-8 md:p-10"
           >
             <p className="eyebrow">
-              <span className="font-mono text-arc">01</span> The approach
+              <span className="font-mono text-arc">01</span> Cold to shell
             </p>
             <h2 className="mt-5 font-display text-section leading-[1.05] font-light tracking-[-0.02em] text-white">
-              Tailored Engineering for <span className="font-medium">Any Workflow</span>
+              Dropped, spun up, <span className="font-medium">in your shell</span>
             </h2>
             <p className="mt-5 text-pretty text-body leading-relaxed text-white/65">
-              Are you looking for an end-to-end team to manage your entire business workflow, or a
-              specialized group to integrate seamlessly with your existing team? Notch Team has
-              you covered.
+              Every node starts the same way: a request arrives, the hypervisor picks the least
+              loaded host, and your key pair is live before the page finishes settling. No queue,
+              no ticket, no &ldquo;we&rsquo;ll provision that Tuesday&rdquo;.
             </p>
             <div
               ref={hintRef}
               className="mt-7 flex items-center gap-2 text-micro tracking-[0.1em] text-white/35 uppercase transition-opacity duration-500"
             >
               <span aria-hidden className="size-1.5 rounded-full bg-energy" />
-              Scroll — the ball follows
+              Scroll — the drop follows
             </div>
           </motion.div>
         </div>
