@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { BrandMark } from "@/components/brand-mark";
 import Link from "next/link";
 import { site } from "@/lib/site";
 
@@ -14,9 +14,9 @@ export function Footer() {
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 md:grid-cols-[1.4fr_1fr_1fr] md:px-8">
         <div>
           <div className="flex items-center gap-2.5">
-            <Image src="/logo.png" alt={`${site.fullName} mark`} width={26} height={26} className="h-6.5 w-6.5 object-contain" />
-            <span className="font-display text-sm font-medium tracking-tight text-white">
-              {site.name} <span className="text-white/50">{site.suffix}</span>
+            <BrandMark size={24} />
+            <span className="font-display text-sm font-medium tracking-[0.18em] text-white uppercase">
+              {site.name} {site.suffix}
             </span>
           </div>
           <p className="mt-4 max-w-sm text-body leading-relaxed text-white/50">
@@ -26,7 +26,7 @@ export function Footer() {
 
         <nav aria-label="Footer" className="flex flex-col gap-3">
           <p className="font-display text-micro font-medium tracking-[0.14em] text-white/35 uppercase">
-            Site
+            VPS
           </p>
           {site.nav.map((l) => (
             <Link key={l.href} href={l.href} className="text-body text-white/60 transition-colors hover:text-white">
@@ -51,7 +51,7 @@ export function Footer() {
           >
             {site.email}
           </a>
-          <p className="text-body text-white/60">{site.location}</p>
+          <p className="text-body text-white/60">{site.tagline}</p>
           <div className="mt-2 flex gap-5">
             <a href={site.social.github} className="text-micro tracking-wide text-white/40 uppercase transition-colors hover:text-white">
               GitHub
@@ -83,7 +83,7 @@ export function Footer() {
           aria-label={`${site.fullName} — back to top`}
           className="opacity-80 transition-opacity duration-300 hover:opacity-100"
         >
-          <Image src="/logo.png" alt="" width={32} height={32} className="h-8 w-8 object-contain" />
+          <BrandMark size={30} />
         </Link>
       </div>
     </footer>

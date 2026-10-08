@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
 /**
- * THE CHROME SPIRAL — the drop from a cold start to a shell prompt.
+ * THE CHROME SPIRAL — order to running instance, visualised.
  *
  * A faceted chrome rod twisted into a descending helix with an additive
  * energy sheath hugging it, a glossy ball that rides the path carrying its
@@ -14,7 +14,7 @@ import { motion, useReducedMotion } from "motion/react";
  * at the base, and drifting dust for depth. Scrolling drives everything:
  * the ball slides, the world turns, and the camera dollies in and down.
  * The glass value-prop panel floats over the scene; a mission-control HUD
- * tracks the drop.
+ * tracks provisioning.
  *
  * Mobile: capped pixel ratio, lighter geometry, scroll-only motion (no
  * pointer dependency), pauses off-screen, static frame under
@@ -224,7 +224,7 @@ function useChromeSpiral(
       if (pct !== lastPct) {
         lastPct = pct;
         if (hudRef.current)
-          hudRef.current.textContent = `DROP ${String(pct).padStart(3, "0")} / 100`;
+          hudRef.current.textContent = `PROVISION ${String(pct).padStart(3, "0")} / 100`;
         if (barRef.current) barRef.current.style.transform = `scaleX(${current})`;
         if (hintRef.current) hintRef.current.style.opacity = current > 0.06 ? "0" : "1";
       }
@@ -236,7 +236,7 @@ function useChromeSpiral(
       place(0.3);
       world.rotation.y = 0.6;
       renderer.render(scene, camera);
-      if (hudRef.current) hudRef.current.textContent = "DROP 030 / 100";
+      if (hudRef.current) hudRef.current.textContent = "PROVISION 030 / 100";
     } else {
       tick();
     }
@@ -268,8 +268,7 @@ export function ChromeSpiral() {
   return (
     <section
       ref={sectionRef}
-      id="network"
-      aria-label="Provisioning"
+      aria-label="Provisioning pipeline"
       className="relative h-[260svh] bg-void"
     >
       <div className="sticky top-0 flex h-svh items-center overflow-hidden">
@@ -285,22 +284,22 @@ export function ChromeSpiral() {
             className="glass-panel max-w-lg p-8 md:p-10"
           >
             <p className="eyebrow">
-              <span className="font-mono text-arc">01</span> Cold to shell
+              <span className="font-mono text-arc">Provisioning</span>
             </p>
             <h2 className="mt-5 font-display text-section leading-[1.05] font-light tracking-[-0.02em] text-white">
-              Dropped, spun up, <span className="font-medium">in your shell</span>
+              From order to <span className="font-medium">running instance</span>
             </h2>
             <p className="mt-5 text-pretty text-body leading-relaxed text-white/65">
-              Every node starts the same way: a request arrives, the hypervisor picks the least
-              loaded host, and your key pair is live before the page finishes settling. No queue,
-              no ticket, no &ldquo;we&rsquo;ll provision that Tuesday&rdquo;.
+              Every VPS is built the same way: the order lands, the hypervisor picks the
+              least-loaded host, and the instance boots with its daily backup already scheduled.
+              No queue, no ticket, no &ldquo;we&rsquo;ll provision it Tuesday&rdquo;.
             </p>
             <div
               ref={hintRef}
               className="mt-7 flex items-center gap-2 text-micro tracking-[0.1em] text-white/35 uppercase transition-opacity duration-500"
             >
               <span aria-hidden className="size-1.5 rounded-full bg-energy" />
-              Scroll — the drop follows
+              Scroll — provisioning follows
             </div>
           </motion.div>
         </div>
@@ -311,7 +310,7 @@ export function ChromeSpiral() {
             ref={hudRef}
             className="font-mono text-micro tracking-[0.14em] text-white/50 uppercase"
           >
-            DROP 000 / 100
+            PROVISION 000 / 100
           </span>
           <div className="h-px w-24 overflow-hidden bg-white/10 md:w-36">
             <div

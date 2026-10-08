@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { BrandMark } from "@/components/brand-mark";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -31,9 +31,9 @@ export function Navbar() {
       <nav className="mx-auto flex h-full max-w-7xl items-center justify-between px-5 md:px-8">
         {/* logotype */}
         <Link href="/" className="flex items-center gap-2.5" aria-label={`${site.fullName} — home`}>
-          <Image src="/logo.png" alt={`${site.fullName} mark`} width={28} height={28} className="h-7 w-7 object-contain" priority />
-          <span className="font-display text-[0.95rem] font-medium tracking-tight text-white">
-            {site.name} <span className="text-white/50">{site.suffix}</span>
+          <BrandMark size={26} />
+          <span className="font-display text-[0.95rem] font-medium tracking-[0.18em] text-white uppercase">
+            {site.name} {site.suffix}
           </span>
         </Link>
 

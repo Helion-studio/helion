@@ -1,6 +1,7 @@
 import { Hero } from "@/components/sections/hero";
 import { ChromeSpiral } from "@/components/sections/chrome-spiral";
-import { Plans, Flow, FinalCta } from "@/components/sections/plans";
+import { Plans, FinalCta } from "@/components/sections/plans";
+import { Infrastructure } from "@/components/sections/features";
 
 export default function Home() {
   return (
@@ -8,7 +9,7 @@ export default function Home() {
       <Hero />
       <ChromeSpiral />
       <Plans />
-      <Flow />
+      <Infrastructure />
       <FinalCta />
     </main>
   );

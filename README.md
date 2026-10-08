@@ -1,8 +1,13 @@
-# Dannystore — VPS store landing page
+# Orbit Node — VPS store landing page
 
-One page, no routes: **Hero → Cold-to-shell spiral → Plans → Flow → Final CTA.**
-Next.js 16 (App Router) · React 19 · TypeScript · Tailwind v4 · Motion · raw
-`three.js` for the light effects. Static-prerendered, Vercel-ready.
+One page, no routes: **Hero → provisioning spiral → Plans (VPS-1…VPS-4) →
+Infrastructure → CTA.** Next.js 16 (App Router) · React 19 · TypeScript ·
+Tailwind v4 · Motion · raw `three.js` for the spiral only.
+
+**There are no images in this repo.** `public/` is empty by design: the sky,
+planet, atmosphere arc, chrome orb and the brand mark are all CSS gradients, and
+`next/image` is not imported anywhere. Nothing to optimise, nothing to license,
+nothing to ship.
 
 ```bash
 npm install
@@ -12,72 +17,57 @@ npm run lint      # 0 errors
 npm run typecheck
 ```
 
-## Rename the brand in one place
+## Two switches, that's the whole CMS
 
-`src/lib/site.ts` — `fullName`, `domain`, `tagline`, `description`, `email`,
-`location`, `nav`, `cta`, `social`. The navbar, footer, `mailto:` links, the
-`<title>`/OG block and the region count in the hero badge all read from it, so
-a rebrand is one file. The copy data (plan matrix, deploy flow, included strip)
-lives in `src/lib/content.ts` — **no prices anywhere** on purpose: tiers are
-spec-only, so nothing drifts out of sync with billing.
+| File | What it controls |
+| --- | --- |
+| `src/lib/site.ts` | name / suffix / domain / tagline / description / email / nav / CTA / socials. Navbar, footer, `<title>`+OG, every `mailto:` read from here. |
+| `src/lib/content.ts` | the `range` label ("VPS 2027"), `plans[]`, the spec checklist order, `heroStats`, `pillars`, `features` (grouped: Hardware / Software / Network & IP / Services), `options` add-ons. |
 
-## Landing flow
+⚠️ **The prices in `content.ts` are placeholders copied from OVHcloud's VPS page**
+(`$4.54 / $8.50 / $12.32 / $23.37`) so the cards look real while you build.
+Set `price: ""` and the card falls back to showing the range name instead —
+no other change needed.
 
-| # | Section | File | What's in it |
+## Hero (matches the approved mockup, text-for-text)
+
+`LIVE — 4 VPS plans online` badge → `Infrastructure,` / `elevated.` (second line
+carries the blue→white gradient) → *"High-performance VPS hosting for projects
+that refuse to slow down."* → `[Explore VPS plans]` `[View infrastructure]` →
+`99.99% uptime · NVMe storage · 24/7 support`, with the `Chat with us` pill
+bottom-right and a scroll cue.
+
+Background, in order (`.hero-sky`, `.hero-planet`, `.hero-rim`, `.hero-fade`):
+a layered radial-gradient star field, a 155vmax sphere offset off the bottom
+right corner so only its limb shows, and **one** masked-border ring for the
+atmosphere. The ring breathes (`rimBreathe`, opacity+blur only) — that is the
+whole animation budget. The WebGL curve overlay and the `hero-bg-blue.jpg`
+artwork it sat on are both gone.
+
+## Responsive / interaction budget
+
+| Effect | Where | Cost | Reduced motion |
 | --- | --- | --- | --- |
-| — | Hero | `sections/hero.tsx` | The approved artwork/composition, kept intact. Copy is the store's. Blue is now real light (see below) instead of a blurred circle. |
-| 01 | Cold to shell | `sections/chrome-spiral.tsx` | Chrome helix, scroll-driven ball, glass panel with the provisioning pitch. Procedural `TubeGeometry` — no model files. |
-| 02 | Plans | `sections/plans.tsx` | 4 compact cards (Nano/Micro/Core/Titan): image top, vCPU · RAM · NVMe · network grid, "Most deployed" badge, deploy button. Plus the included-with-every-node strip. |
-| 03 | Flow | `sections/plans.tsx` | Copyable `ssh` terminal chip + three workflow steps driven by the mini lottie runtime. |
-| 04 | Start | `sections/plans.tsx` | Final CTA with the pure-CSS chrome orb. |
+| Shine on pointer, spring press to 0.975, ripple from the touch point | `components/tactile.tsx` (used by every button, incl. **Configure**) | 2 CSS vars + 1 self-removing span | static button |
+| Card lift + border glow on hover | `.vps-card` | transform/box-shadow | none |
+| Feature group switcher | `sections/features.tsx` | one `useState` | instant swap |
+| Star particle field | `components/hero/particles.tsx` | canvas, desktop pointers only, pauses off-screen | not mounted |
+| Chrome spiral | `sections/chrome-spiral.tsx` | three.js, DPR-capped, pauses off-screen | static frame |
 
-## The blue, and why it's cheap
-
-- **`hero/limb-glow.tsx`** — one `THREE.ShaderMaterial` on a single fullscreen
-  quad: horizon arc, a light band that travels along the limb, breathing bloom.
-  Half resolution, pixel ratio capped (1.5 desktop / 1 mobile), ~45fps ceiling,
-  intensity drops to 0 once the hero scrolls away. Zero new dependencies (three
-  was already in the bundle for the spiral) and zero bytes of image data.
-- **`.hero-limb`** in `globals.css` — the same arc drawn with a clip-path, used
-  when `prefers-reduced-motion` is on or WebGL is unavailable. Static, still glowy.
-- **Contrast** — the shared blue token moved `#3b82f6 → #4a9dff` and the hero
-  bloom's alpha/opacity range was raised, so the light reads as light, not mud.
-
-## Motion / interaction budget
-
-| Effect | Cost | Reduced-motion behaviour |
-| --- | --- | --- |
-| Tactile buttons (`tactile.tsx`) | pointer shine = 2 CSS vars; ripple = 1 span, self-removes | plain static button |
-| Card tilt + spotlight (`plans.tsx`) | transform/opacity only, fine pointers only | no tilt, no spotlight |
-| Lottie player (`lottie.tsx`) | ~1.5 KB runtime, rAF → `transform`/`opacity` writes, pauses off-screen | holds a legible static frame |
-| Particle field, spiral | existing; already pause off-screen / skip touch | static frame |
-
-## Lottie files
-
-The runtime understands a small subset (opacity/position/scale keyframes), so
-we generate the three flow animations in code via `makeAnim()`. To use a real
-export instead, drop the JSON in `public/vps/` and swap the prop:
-
-```tsx
-<Lottie src="/vps/deploy.lottie.json" label="Deploy in ~40s" />
-```
-
-Anything the interpreter doesn't understand renders as its first frame — a real
-After Effects file can never break the layout, it just stops animating the
-parts we skip. If you want full fidelity later, install `lottie-web` (~250 KB)
-and point the same `<Lottie>` at it.
+Copy stays the product of `https://www.ovhcloud.com/en/vps/`: plan matrix,
+"Daily backup of the previous 24 hours / Unlimited traffic / N Gbps public
+bandwidth", the four pillars, and the four feature groups. Structure follows
+theirs (year chip → name → From price → Configure → checklist). **No competitor
+name, logo or asset appears in the UI or the code comments** — replace the copy
+with your own before you go public.
 
 ## Fonts
 
-System-first so the build needs no network. The Sora/Manrope snippet is at the
-top of `src/app/layout.tsx` — it needs `fonts.googleapis.com` reachable at build
-time.
+System-first so the build needs no network. The Sora/Manrope `next/font`
+snippet is documented at the top of `src/app/layout.tsx`.
 
-## What was deleted to get here
+## Deleting the last of the "VPS store ≠ node store" leftovers
 
-Everything outside the landing page's import graph: the Work/Process/More/Contact
-pages, all API routes, Supabase · Groq · Resend · SQLite integrations, the
-external `.glb` car + server scenes and their GLTF loaders, the eight "What We
-Build" service rows and the Custom Ecosystems block, the shadcn UI kit, all of
-`components/shelved/`, and 14 packages. The full previous site is intact on
-`main`.
+Nothing in the UI says "node" except the brand. If you would rather not ship
+`Orbit Node` as the name at all, `src/lib/site.ts` is the only place it is
+defined.

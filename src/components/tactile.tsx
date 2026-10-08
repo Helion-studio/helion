@@ -23,7 +23,7 @@ type TactileProps = {
   children: ReactNode;
   href?: string;
   onClick?: () => void;
-  variant?: "primary" | "ghost" | "mini";
+  variant?: "primary" | "ghost" | "configure";
   className?: string;
   type?: "button" | "submit";
   ariaLabel?: string;
@@ -41,11 +41,7 @@ export function Tactile({
   const ref = useRef<HTMLAnchorElement | HTMLButtonElement | null>(null);
   const rm = useReducedMotion();
   const base =
-    variant === "primary"
-      ? "btn-primary"
-      : variant === "mini"
-        ? "btn-mini"
-        : "btn-ghost";
+    variant === "primary" ? "btn-primary" : variant === "configure" ? "btn-configure" : "btn-ghost";
 
   const follow = (e: React.PointerEvent) => {
     const el = ref.current;

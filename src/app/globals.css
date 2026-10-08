@@ -1,14 +1,11 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-
 /* ------------------------------------------------------------------
-   Landing-page design tokens — fluid type scale + mission-control palette
-   Display: Sora · Body: Manrope (wired up in app/layout.tsx)
+   Design tokens — fluid type scale + the store's palette.
+   No image assets anywhere: the sky, planet and brand mark are CSS.
 ------------------------------------------------------------------- */
 @theme inline {
-  /* Display + body faces. Swap in next/font variables here to go back to
-     Sora / Manrope (see src/app/layout.tsx for the documented snippet). */
   --font-display: "Sora", "Manrope", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
@@ -28,11 +25,12 @@
   --text-section: clamp(1.75rem, 3vw, 2.5rem);
   --text-hero: clamp(3rem, 7vw, 6rem);
 
-  /* palette — surfaces/text/borders use white opacity utilities */
+  /* palette */
   --color-void: #030508;
   --color-arc: #4a9dff;
   --color-accent: #60a5fa;
   --color-energy: #22d3ee;
+  --color-hot: #ff6b1a;
 }
 
 @layer base {
@@ -48,55 +46,104 @@
     background: var(--color-background);
     color: var(--color-foreground);
   }
-  /* WebGL canvas should never intercept scroll on touch devices */
+  /* WebGL canvas (the spiral) must never eat a touch scroll */
   canvas {
     touch-action: pan-y;
   }
 }
 
 /* ------------------------------------------------------------------
-   HERO — artwork breathing + glow bloom
+   HERO SKY — the whole background is drawn with gradients.
+   .hero-sky   stars + deep field
+   .hero-planet  the sphere's lit surface
+   .hero-rim   the one bright atmosphere arc
+   .hero-fade  dissolves the bottom into the page void
 ------------------------------------------------------------------- */
-.hero-bg-base {
-  transform: scale(1.03);
-  animation: heroBreathe 19s ease-in-out infinite;
-  will-change: transform, filter;
+.hero-sky {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(1px 1px at 12% 18%, rgba(255, 255, 255, 0.75), transparent 60%),
+    radial-gradient(1px 1px at 78% 12%, rgba(255, 255, 255, 0.55), transparent 60%),
+    radial-gradient(1.4px 1.4px at 90% 34%, rgba(190, 225, 255, 0.7), transparent 60%),
+    radial-gradient(1px 1px at 26% 62%, rgba(255, 255, 255, 0.45), transparent 60%),
+    radial-gradient(1px 1px at 62% 78%, rgba(190, 225, 255, 0.4), transparent 60%),
+    radial-gradient(1.6px 1.6px at 44% 26%, rgba(255, 255, 255, 0.5), transparent 60%),
+    radial-gradient(1px 1px at 6% 78%, rgba(255, 255, 255, 0.35), transparent 60%),
+    radial-gradient(120% 92% at 74% 8%, #0a1830 0%, #06101f 34%, #030508 72%);
 }
 
-@keyframes heroBreathe {
+.hero-planet {
+  position: absolute;
+  z-index: 1;
+  width: 155vmax;
+  height: 155vmax;
+  right: -48vmax;
+  bottom: -104vmax;
+  border-radius: 50%;
+  background:
+    radial-gradient(58% 42% at 42% 22%, rgba(120, 180, 255, 0.1), transparent 62%),
+    radial-gradient(circle at 44% 26%, #17263d 0%, #0b1424 44%, #050a13 72%, #030508 100%);
+}
+
+.hero-rim {
+  position: absolute;
+  z-index: 2;
+  width: 155vmax;
+  height: 155vmax;
+  right: -48vmax;
+  bottom: -104vmax;
+  border-radius: 50%;
+  border: 1.1vmax solid rgba(115, 190, 255, 0.9);
+  -webkit-mask: radial-gradient(
+    closest-side,
+    transparent calc(100% - 1.9vmax),
+    #000 calc(100% - 1.9vmax),
+    #000 100%
+  );
+  mask: radial-gradient(
+    closest-side,
+    transparent calc(100% - 1.9vmax),
+    #000 calc(100% - 1.9vmax),
+    #000 100%
+  );
+  filter: blur(2.6px) saturate(1.4);
+  animation: rimBreathe 9s ease-in-out infinite;
+}
+
+@keyframes rimBreathe {
   0%,
   100% {
-    transform: scale(1.03);
-    filter: brightness(1) saturate(1);
-  }
-  50% {
-    transform: scale(1.055);
-    filter: brightness(1.1) saturate(1.06);
-  }
-}
-
-.hero-glow {
-  top: 8%;
-  right: -10%;
-  height: 85%;
-  width: 70%;
-  background: radial-gradient(closest-side, rgba(74, 157, 255, 0.46), rgba(30, 90, 200, 0.12) 55%, transparent 78%);
-  animation: heroGlow 13s ease-in-out infinite;
-}
-
-@keyframes heroGlow {
-  0%,
-  100% {
-    opacity: 0.5;
-    transform: scale(1);
+    opacity: 0.55;
+    filter: blur(3.4px) saturate(1.25);
   }
   50% {
     opacity: 0.95;
-    transform: scale(1.04);
+    filter: blur(1.6px) saturate(1.6);
   }
 }
 
-/* pulsing "live" dot */
+.hero-fade {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 3;
+  height: 9rem;
+  background: linear-gradient(to bottom, transparent, #030508);
+}
+
+/* the emphasised half of the headline: blue into white, per the mockup */
+.hero-lead-word {
+  background: linear-gradient(100deg, #4a9dff 0%, #9ed0ff 42%, #ffffff 78%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ------------------------------------------------------------------
+   Small shared pieces
+------------------------------------------------------------------- */
 @keyframes pulseDot {
   0%,
   100% {
@@ -112,16 +159,15 @@
   animation: pulseDot 2s ease-in-out infinite;
 }
 
-/* particles canvas fades in at the 3s mark of the load sequence */
+/* particles fade in late so the copy lands first */
 .particle-layer {
   opacity: 0;
-  transition: opacity 1.4s ease 3s;
+  transition: opacity 1.4s ease 2.6s;
 }
 .particle-layer.is-live {
   opacity: 1;
 }
 
-/* hero scroll cue */
 .scroll-cue {
   display: block;
   width: 1px;
@@ -159,7 +205,7 @@ html.custom-cursor * {
   height: 8px;
   margin: -4px 0 0 -4px;
   border-radius: 9999px;
-  background: #3b82f6;
+  background: var(--color-arc);
   mix-blend-mode: difference;
   pointer-events: none;
   opacity: 0;
@@ -173,7 +219,7 @@ html.custom-cursor * {
   height: 34px;
   margin: -17px 0 0 -17px;
   border-radius: 9999px;
-  border: 1px solid rgba(59, 130, 246, 0.8);
+  border: 1px solid rgba(74, 157, 255, 0.8);
   mix-blend-mode: difference;
   pointer-events: none;
   opacity: 0;
@@ -191,22 +237,19 @@ html.custom-cursor * {
   border-color: #fff;
 }
 
-/* ------------------------------------------------------------------
-   Shared component classes
-------------------------------------------------------------------- */
 @layer components {
   .eyebrow {
     @apply font-display text-tag font-medium tracking-[0.14em] text-white/40 uppercase;
   }
   .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 font-display text-nav font-medium text-void transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(59,130,246,0.25)];
+    @apply inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 font-display text-nav font-medium text-void transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(74,157,255,0.3)];
   }
   .btn-ghost {
     @apply inline-flex items-center gap-2 rounded-full border border-white/10 px-7 py-3.5 font-display text-nav font-medium text-white transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.04];
   }
 }
 
-/* ambient page light — blue/black, adjusts with scroll + cursor */
+/* ambient page light — blue/black, steered by scroll + cursor */
 .ambient {
   position: fixed;
   inset: 0;
@@ -226,7 +269,6 @@ html.custom-cursor * {
   transition: background 0.6s ease;
 }
 
-/* glass panel (over the chrome spiral) + service chips */
 .glass-panel {
   background: rgba(255, 255, 255, 0.045);
   backdrop-filter: blur(16px);
@@ -234,54 +276,6 @@ html.custom-cursor * {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1.25rem;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
-}
-.chip {
-  font-family: var(--font-mono-src, ui-monospace), ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: var(--text-micro);
-  letter-spacing: 0.06em;
-  color: rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 9999px;
-  padding: 0.3rem 0.75rem;
-  white-space: nowrap;
-}
-
-/* services — 3D-style image panes (rim-lit, floating) */
-.pane-3d {
-  position: relative;
-  border-radius: 1rem;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow:
-    0 0 0 1px rgba(59, 130, 246, 0.06),
-    0 30px 80px rgba(0, 0, 0, 0.55),
-    0 8px 40px rgba(59, 130, 246, 0.08);
-}
-.pane-3d::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, rgba(147, 197, 253, 0.14), transparent 18%),
-    linear-gradient(0deg, rgba(3, 5, 8, 0.55), transparent 30%);
-}
-.ghost-index {
-  position: absolute;
-  top: -1.4rem;
-  left: -0.25rem;
-  font-size: clamp(4.5rem, 9vw, 7.5rem);
-  font-weight: 300;
-  line-height: 1;
-  letter-spacing: -0.04em;
-  color: rgba(255, 255, 255, 0.04);
-  user-select: none;
-  pointer-events: none;
-}
-.row-rule {
-  height: 1px;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 72%);
 }
 
 /* footer ghost wordmark */
@@ -294,7 +288,7 @@ html.custom-cursor * {
   user-select: none;
 }
 
-/* final CTA — pure-CSS chrome orb */
+/* final CTA — pure-CSS chrome orb (no image, no canvas) */
 .orb {
   display: block;
   border-radius: 9999px;
@@ -307,7 +301,7 @@ html.custom-cursor * {
     #0a1020 100%
   );
   box-shadow:
-    0 0 36px rgba(59, 130, 246, 0.4),
+    0 0 36px rgba(74, 157, 255, 0.4),
     inset -6px -10px 20px rgba(0, 0, 0, 0.55);
   animation: orbFloat 5.5s ease-in-out infinite;
 }
@@ -322,92 +316,33 @@ html.custom-cursor * {
 }
 
 /* ------------------------------------------------------------------
-   The polish pass
+   Brand mark — orbit ring + satellite, replaces /logo.png
 ------------------------------------------------------------------- */
-::selection {
-  background: rgba(59, 130, 246, 0.35);
-  color: #fff;
+.brand-mark {
+  position: relative;
+  display: inline-flex;
+  flex: none;
 }
-:focus-visible {
-  outline: 2px solid rgba(59, 130, 246, 0.7);
-  outline-offset: 2px;
-}
-html {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
-}
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.14);
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(59, 130, 246, 0.5);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-pulse-dot {
-    animation: none;
-  }
-  .particle-layer {
-    transition: none;
-    opacity: 1;
-  }
-  .hero-bg-base,
-  .hero-glow {
-    animation: none;
-  }
-  .scroll-cue {
-    display: none;
-  }
-  .orb {
-    animation: none;
-  }
-}
-
-
-/* ------------------------------------------------------------------
-   DANNYSTORE — the light layer
-   .hero-limb is the static fallback for the WebGL LimbGlow (no WebGL,
-   reduced motion): the same horizon arc, drawn with a clip-path + bloom.
-------------------------------------------------------------------- */
-.hero-limb {
+.brand-mark__ring {
   position: absolute;
-  inset: -12%;
-  background: radial-gradient(
-    58% 58% at 63% 88%,
-    rgba(120, 200, 255, 0.30) 0%,
-    rgba(74, 157, 255, 0.12) 38%,
-    transparent 70%
-  );
-  -webkit-clip-path: polygon(28% 0, 100% 0, 100% 62%, 66% 100%, 0 100%, 0 34%);
-  clip-path: polygon(28% 0, 100% 0, 100% 62%, 66% 100%, 0 100%, 0 34%);
-  filter: blur(14px) saturate(1.5);
-  mix-blend-mode: screen;
-  opacity: 0.55;
-  animation: limbBreathe 11s ease-in-out infinite;
+  inset: 6%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  transform: rotate(-28deg) scaleY(0.52);
 }
-
-@keyframes limbBreathe {
-  0%, 100% {
-    opacity: 0.42;
-    filter: blur(14px) saturate(1.35);
-  }
-  50% {
-    opacity: 0.85;
-    filter: blur(9px) saturate(1.85);
-  }
+.brand-mark__dot {
+  position: absolute;
+  top: 4%;
+  right: 12%;
+  width: 26%;
+  height: 26%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #ffffff, var(--color-arc) 58%, #0b3c86 100%);
+  box-shadow: 0 0 10px rgba(74, 157, 255, 0.8);
 }
 
 /* ------------------------------------------------------------------
-   Tactile buttons — pointer-tracked shine, spring press, ripple.
-   Driven by --mx/--my written from JS; hover/active-only so touch
-   devices never pay for a shadow they cannot see.
+   Tactile buttons — pointer shine, spring press, ripple, orange CTA
 ------------------------------------------------------------------- */
 .tactile {
   position: relative;
@@ -427,11 +362,7 @@ html {
   z-index: 0;
   border-radius: inherit;
   opacity: 0;
-  background: radial-gradient(
-    130px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(255, 255, 255, 0.3),
-    transparent 70%
-  );
+  background: radial-gradient(130px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.3), transparent 70%);
   transition: opacity 0.3s ease;
   pointer-events: none;
 }
@@ -470,268 +401,229 @@ html {
     opacity: 0;
   }
 }
-.btn-mini {
+
+/* the store's Configure button — the mockup's orange, with a press glow */
+.btn-configure {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
-  padding: 0.5rem 0.95rem;
+  gap: 0.5rem;
+  border-radius: 0.6rem;
+  padding: 0.7rem 1.1rem;
   font-family: var(--font-display);
-  font-size: var(--text-micro);
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  font-size: var(--text-nav);
+  font-weight: 600;
+  letter-spacing: 0.01em;
   color: #fff;
+  background: linear-gradient(180deg, #ff8a3d 0%, #ff5a0a 55%, #e8440a 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 6px 18px rgba(255, 90, 10, 0.28);
+}
+.btn-configure:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 10px 30px rgba(255, 90, 10, 0.45);
+}
+.btn-configure:active {
+  box-shadow: 0 4px 12px rgba(255, 90, 10, 0.3);
 }
 
 /* ------------------------------------------------------------------
-   Plan cards — compact, image-topped, pointer spotlight + micro tilt
+   Plan cards — year chip, price, Configure, checklist
 ------------------------------------------------------------------- */
-.plan-card {
-  --gx: 50%;
-  --gy: 50%;
-  --tilt: 0deg;
-  --tilt-y: 0deg;
-  position: relative;
+.vps-card {
   display: flex;
   flex-direction: column;
   overflow: hidden;
   border-radius: 1.15rem;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  background: linear-gradient(180deg, rgba(13, 20, 32, 0.92), rgba(5, 8, 14, 0.92));
-  transform: perspective(900px) rotateX(var(--tilt)) rotateY(var(--tilt-y));
-  transform-style: preserve-3d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, rgba(13, 20, 32, 0.92), rgba(5, 8, 14, 0.94));
   transition:
     border-color 0.35s ease,
-    box-shadow 0.45s ease,
+    box-shadow 0.4s ease,
     transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.plan-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  opacity: 0;
-  background: radial-gradient(240px circle at var(--gx) var(--gy), rgba(74, 157, 255, 0.16), transparent 68%);
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-}
-.plan-card.is-lit {
-  border-color: rgba(74, 157, 255, 0.45);
+.vps-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(74, 157, 255, 0.4);
   box-shadow:
-    0 24px 70px rgba(0, 0, 0, 0.55),
-    0 0 44px rgba(74, 157, 255, 0.14);
+    0 22px 60px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(74, 157, 255, 0.12);
 }
-.plan-card.is-lit::before {
-  opacity: 1;
+.vps-card__top {
+  padding: 1.15rem 1.15rem 1.35rem;
 }
-.plan-card--hot {
-  border-color: rgba(74, 157, 255, 0.34);
-  box-shadow: 0 0 0 1px rgba(74, 157, 255, 0.1), 0 26px 70px rgba(0, 0, 0, 0.5);
-}
-.plan-media {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-}
-.plan-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: saturate(1.15) contrast(1.06) brightness(0.92);
-  transform: scale(1.02);
-  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.plan-card:hover .plan-img {
-  transform: scale(1.07);
-}
-.plan-media-fade {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(5, 8, 14, 0.1) 0%, rgba(5, 8, 14, 0.55) 58%, rgba(5, 8, 14, 0.96) 100%);
-}
-.plan-badge {
-  position: absolute;
-  top: 0.7rem;
-  left: 0.7rem;
+.vps-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  border-radius: 9999px;
-  border: 1px solid rgba(34, 211, 238, 0.35);
-  background: rgba(3, 8, 16, 0.7);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  padding: 0.3rem 0.6rem;
-  font-family: var(--font-display);
-  font-size: var(--text-micro);
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #d7f2ff;
-}
-.plan-body {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  padding: 1rem 1.05rem 1.15rem;
-  margin-top: -2.75rem;
-}
-.plan-spec {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  padding: 0.45rem 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-.plan-spec dt {
+  border-radius: 0.4rem;
+  background: linear-gradient(120deg, #a9f3ff, #7dd3fc);
+  padding: 0.2rem 0.5rem;
   font-family: var(--font-mono);
-  font-size: var(--text-micro);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #06202e;
 }
-.plan-spec dd {
-  font-family: var(--font-display);
-  font-size: 0.95rem;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  color: #fff;
-}
-
-/* ------------------------------------------------------------------
-   Lottie host — the interpreter paints transform/opacity on these
-------------------------------------------------------------------- */
-.lottie {
-  position: relative;
-  width: 100%;
-  max-width: 104px;
-  aspect-ratio: 1 / 1;
-}
-.lottie__layer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: block;
-  border-radius: 9999px;
-  transform: translate(-50%, -50%);
-  will-change: transform, opacity;
-}
-.lottie__layer--0 {
-  width: 78%;
-  height: 78%;
-  border: 1px solid rgba(74, 157, 255, 0.5);
-  background: radial-gradient(closest-side, rgba(74, 157, 255, 0.16), transparent 72%);
-}
-.lottie__layer--1 {
-  width: 26%;
-  height: 26%;
-  background: radial-gradient(circle at 34% 30%, #eaf5ff, #4a9dff 52%, #0b3c86 100%);
-  box-shadow: 0 0 22px rgba(74, 157, 255, 0.55);
-}
-.lottie--bolt .lottie__layer--0 {
-  border-color: rgba(34, 211, 238, 0.55);
-  background: conic-gradient(from 210deg, rgba(34, 211, 238, 0.35), transparent 40%, rgba(74, 157, 255, 0.3) 70%, transparent);
-}
-.lottie--bolt .lottie__layer--1 {
-  clip-path: polygon(58% 0, 12% 56%, 44% 56%, 36% 100%, 88% 40%, 52% 40%);
-  border-radius: 0;
-  width: 34%;
-  height: 44%;
-  background: linear-gradient(180deg, #eafaff, #38bdf8);
-  box-shadow: 0 0 26px rgba(56, 189, 248, 0.6);
-}
-.lottie--globe .lottie__layer--0 {
-  width: 84%;
-  height: 56%;
-  border-radius: 50%;
-  border-color: rgba(74, 157, 255, 0.45);
-  background: repeating-linear-gradient(90deg, rgba(74, 157, 255, 0.2) 0 1px, transparent 1px 12px);
-}
-.lottie--globe .lottie__layer--1 {
-  width: 18%;
-  height: 18%;
-}
-.lottie--empty {
-  border-radius: 9999px;
-  background: radial-gradient(closest-side, rgba(74, 157, 255, 0.18), transparent 70%);
-}
-
-/* ------------------------------------------------------------------
-   Flow steps + terminal chip
-------------------------------------------------------------------- */
-.flow-step {
-  position: relative;
+.vps-specs {
   display: flex;
   flex-direction: column;
+  gap: 0.7rem;
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 1.15rem;
+}
+.vps-specs li {
+  display: flex;
   align-items: flex-start;
-  padding: 1rem 1.1rem 1.2rem;
-  border-radius: 1rem;
+  gap: 0.6rem;
+  font-size: var(--text-body);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* pillars under the plan grid */
+.pillar {
+  padding: 1rem 1.05rem;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+}
+
+/* ------------------------------------------------------------------
+   Infrastructure — group switcher, feature cards, add-ons
+------------------------------------------------------------------- */
+.group-tab {
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.5rem 1rem;
+  font-family: var(--font-display);
+  font-size: var(--text-micro);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+.group-tab:hover {
+  color: #fff;
+  border-color: rgba(74, 157, 255, 0.5);
+}
+.group-tab:active {
+  transform: scale(0.97);
+}
+.group-tab.is-on {
+  color: #030508;
+  background: var(--color-arc);
+  border-color: transparent;
+}
+.feature-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.05rem 1.1rem;
+  border-radius: 0.95rem;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012));
-  transition: border-color 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: border-color 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.flow-step:hover {
+.feature-card:hover {
   border-color: rgba(74, 157, 255, 0.35);
   transform: translateY(-2px);
 }
-.flow-lottie {
-  margin-bottom: 0.6rem;
-}
-.term {
-  display: flex;
-  flex-direction: column;
-  border-radius: 0.85rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: #05080e;
-  padding: 0.8rem 0.9rem;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 18px 50px rgba(0, 0, 0, 0.45);
-}
-.term-copy {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
+.tier-tag {
+  flex: none;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  padding: 0.25rem 0.55rem;
+  padding: 0.2rem 0.5rem;
   font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.08em;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
-  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
-.term-copy:hover {
+.tier-tag--included {
+  color: #9fe8c9;
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  background: rgba(52, 211, 153, 0.08);
+}
+.tier-tag--optional {
+  color: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+}
+.option-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* ------------------------------------------------------------------
+   The polish pass
+------------------------------------------------------------------- */
+::selection {
+  background: rgba(74, 157, 255, 0.35);
   color: #fff;
-  border-color: rgba(74, 157, 255, 0.6);
 }
-.term-copy:active {
-  transform: scale(0.94);
+:focus-visible {
+  outline: 2px solid rgba(74, 157, 255, 0.75);
+  outline-offset: 2px;
+}
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(74, 157, 255, 0.5);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-limb {
+  .animate-pulse-dot {
     animation: none;
-    opacity: 0.6;
   }
-  .tactile,
-  .plan-card,
-  .flow-step,
-  .plan-img {
+  .particle-layer {
     transition: none;
+    opacity: 1;
   }
+  .hero-rim {
+    animation: none;
+    opacity: 0.8;
+  }
+  .scroll-cue,
   .tactile-ripple {
     display: none;
   }
-  .tactile:hover,
-  .tactile:active {
-    transform: none;
+  .orb {
+    animation: none;
   }
-  .plan-card {
+  .tactile,
+  .vps-card,
+  .feature-card {
+    transition: none;
+  }
+  .tactile:hover,
+  .tactile:active,
+  .vps-card:hover,
+  .feature-card:hover {
     transform: none;
   }
 }
